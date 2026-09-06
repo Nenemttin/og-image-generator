@@ -2,11 +2,54 @@
 
 import { useState, useEffect } from "react";
 
+type ThemeOption = {
+  id: "dark" | "gradient" | "minimal" | "terminal";
+  name: "Dark" | "Gradient" | "Minimal" | "Terminal";
+  desc: string;
+  previewClass: string;
+  badge: string;
+};
+
+const THEMES: ThemeOption[] = [
+  {
+    id: "dark",
+    name: "Dark",
+    desc: "클래식 네이비 다크 & 도트 패턴",
+    previewClass: "bg-slate-900 border-slate-700",
+    badge: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  },
+  {
+    id: "gradient",
+    name: "Gradient",
+    desc: "트렌디한 인디고-퍼플 그라디언트",
+    previewClass:
+      "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 border-purple-400/40",
+    badge: "bg-white/25 text-white border-white/40",
+  },
+  {
+    id: "minimal",
+    name: "Minimal",
+    desc: "깔끔한 화이트 & 차콜 텍스트",
+    previewClass: "bg-slate-100 border-slate-300",
+    badge: "bg-slate-200 text-slate-800 border-slate-300",
+  },
+  {
+    id: "terminal",
+    name: "Terminal",
+    desc: "맥 터미널 콘솔 & 신호등 버튼",
+    previewClass: "bg-zinc-900 border-zinc-700",
+    badge: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+  },
+];
+
 export default function Home() {
   const [title, setTitle] = useState(
     "Next.js 14에서 @vercel/og로 세련된 OG 이미지 생성하기"
   );
   const [tag, setTag] = useState("TUTORIAL");
+  const [theme, setTheme] = useState<"dark" | "gradient" | "minimal" | "terminal">(
+    "dark"
+  );
   const [debouncedTitle, setDebouncedTitle] = useState(title);
   const [debouncedTag, setDebouncedTag] = useState(tag);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,9 +77,15 @@ export default function Home() {
     return () => clearTimeout(handler);
   }, [title, tag]);
 
+  // 테마 변경 시 즉시 로딩 표시
+  const handleThemeChange = (newTheme: "dark" | "gradient" | "minimal" | "terminal") => {
+    setIsLoading(true);
+    setTheme(newTheme);
+  };
+
   const ogPath = `/api/og?title=${encodeURIComponent(
     debouncedTitle || "Default Title"
-  )}&tag=${encodeURIComponent(debouncedTag || "TAG")}`;
+  )}&tag=${encodeURIComponent(debouncedTag || "TAG")}&theme=${theme}`;
 
   const fullOgUrl = `${origin}${ogPath}`;
 
@@ -91,7 +140,7 @@ export default function Home() {
         .replace(/[^a-zA-Z0-9가-힣\s-_]/g, "")
         .trim()
         .slice(0, 30);
-      link.download = `${safeTitle || "og-image"}.png`;
+      link.download = `${safeTitle || "og-image"}-${theme}.png`;
 
       document.body.appendChild(link);
       link.click();
@@ -111,14 +160,22 @@ export default function Home() {
     {
       title: "Next.js 14 & @vercel/og로 소셜 미리보기 완성하기",
       tag: "FRONTEND",
+      theme: "dark" as const,
     },
     {
-      title: "Edge Runtime에서 동적으로 렌더링하는 OG 이미지",
-      tag: "TUTORIAL",
+      title: "Dynamic Open Graph Images with Gradient Theme",
+      tag: "DESIGN",
+      theme: "gradient" as const,
     },
     {
-      title: "2026년 프론트엔드 개발 트렌드 총정리",
-      tag: "INSIGHT",
+      title: "클린 코드를 지향하는 프론트엔드 개발 가이드",
+      tag: "MINIMAL",
+      theme: "minimal" as const,
+    },
+    {
+      title: "git commit -m 'Release v1.0.0 for Production'",
+      tag: "DEV-OPS",
+      theme: "terminal" as const,
     },
   ];
 
@@ -131,13 +188,13 @@ export default function Home() {
       <div className="w-full max-w-5xl mb-10 text-center md:text-left">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
           <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-          Realtime Preview & Export
+          Multi-Theme Preview & Export
         </div>
         <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
           OG Image Generator
         </h1>
         <p className="mt-2 text-slate-400 text-sm md:text-base max-w-xl">
-          실시간으로 텍스트를 입력해 1200×630 Open Graph 이미지를 생성하고, HTML 메타 태그 복사 및 PNG 이미지 저장을 한 번에 진행하세요.
+          다양한 디자인 테마를 선택하고 텍스트를 실시간으로 입력하여 1200×630 Open Graph 이미지를 손쉽게 제작하세요.
         </p>
       </div>
 
@@ -159,9 +216,64 @@ export default function Home() {
                   d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                 />
               </svg>
-              속성 설정
+              속성 & 테마 설정
             </h2>
             <span className="text-xs text-slate-500">실시간 연동 중</span>
+          </div>
+
+          {/* 디자인 테마 선택 (라디오/그리드 카드 형태) */}
+          <div className="space-y-2.5">
+            <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider">
+              디자인 테마 선택
+            </label>
+            <div className="grid grid-cols-2 gap-2.5">
+              {THEMES.map((t) => {
+                const isSelected = theme === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => handleThemeChange(t.id)}
+                    className={`relative p-3 rounded-xl border text-left transition-all flex flex-col gap-1.5 ${
+                      isSelected
+                        ? "bg-slate-800 border-blue-500 ring-2 ring-blue-500/30 shadow-md"
+                        : "bg-slate-950/60 border-slate-800 hover:bg-slate-800/50 hover:border-slate-700 text-slate-400"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`w-3.5 h-3.5 rounded-full border shadow-sm ${t.previewClass}`}
+                        />
+                        <span
+                          className={`text-xs font-semibold ${
+                            isSelected ? "text-white" : "text-slate-300"
+                          }`}
+                        >
+                          {t.name}
+                        </span>
+                      </div>
+                      {isSelected && (
+                        <svg
+                          className="w-4 h-4 text-blue-400"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      )}
+                    </div>
+                    <span className="text-[10px] text-slate-400 line-clamp-1">
+                      {t.desc}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* 태그 입력 */}
@@ -213,10 +325,13 @@ export default function Home() {
                   onClick={() => {
                     setTitle(preset.title);
                     setTag(preset.tag);
+                    setTheme(preset.theme);
+                    setIsLoading(true);
                   }}
-                  className="text-xs px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-all hover:text-white"
+                  className="text-xs px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-all hover:text-white flex items-center gap-1.5"
                 >
-                  {preset.tag}
+                  <span>{preset.tag}</span>
+                  <span className="text-[10px] text-slate-500">({preset.theme})</span>
                 </button>
               ))}
             </div>
@@ -250,7 +365,10 @@ export default function Home() {
                 <span className="w-3 h-3 rounded-full bg-yellow-500/80 inline-block" />
                 <span className="w-3 h-3 rounded-full bg-green-500/80 inline-block" />
                 <span className="ml-2 text-xs font-medium text-slate-400">
-                  미리보기 (1200 × 630 px)
+                  미리보기 (1200 × 630 px) —{" "}
+                  <span className="text-blue-400 font-semibold uppercase">
+                    {theme} 테마
+                  </span>
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -442,7 +560,7 @@ export default function Home() {
             </div>
 
             <p className="text-[11px] text-slate-500">
-              💡 웹사이트의 <code className="text-slate-400">&lt;head&gt;</code> 태그 내에 위 코드를 붙여넣으면 Facebook, Twitter, 카카오톡, 슬랙 등에서 풍부한 미리보기가 표시됩니다.
+              💡 웹사이트의 <code className="text-slate-400">&lt;head&gt;</code> 태그 내에 위 코드를 붙여넣으면 소셜 미디어에서 풍부한 미리보기가 표시됩니다.
             </p>
           </div>
         </div>
