@@ -8,6 +8,7 @@ type ThemeOption = {
   desc: string;
   previewClass: string;
   badge: string;
+  isPro?: boolean;
 };
 
 const THEMES: ThemeOption[] = [
@@ -17,6 +18,7 @@ const THEMES: ThemeOption[] = [
     desc: "클래식 네이비 다크 & 도트 패턴",
     previewClass: "bg-slate-900 border-slate-700",
     badge: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+    isPro: false,
   },
   {
     id: "gradient",
@@ -25,6 +27,7 @@ const THEMES: ThemeOption[] = [
     previewClass:
       "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 border-purple-400/40",
     badge: "bg-white/25 text-white border-white/40",
+    isPro: true,
   },
   {
     id: "minimal",
@@ -32,6 +35,7 @@ const THEMES: ThemeOption[] = [
     desc: "깔끔한 화이트 & 차콜 텍스트",
     previewClass: "bg-slate-100 border-slate-300",
     badge: "bg-slate-200 text-slate-800 border-slate-300",
+    isPro: false,
   },
   {
     id: "terminal",
@@ -39,6 +43,7 @@ const THEMES: ThemeOption[] = [
     desc: "맥 터미널 콘솔 & 신호등 버튼",
     previewClass: "bg-zinc-900 border-zinc-700",
     badge: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+    isPro: true,
   },
 ];
 
@@ -50,8 +55,11 @@ export default function Home() {
   const [theme, setTheme] = useState<"dark" | "gradient" | "minimal" | "terminal">(
     "dark"
   );
+  const [licenseKey, setLicenseKey] = useState("");
   const [debouncedTitle, setDebouncedTitle] = useState(title);
   const [debouncedTag, setDebouncedTag] = useState(tag);
+  const [debouncedKey, setDebouncedKey] = useState(licenseKey);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [htmlCopied, setHtmlCopied] = useState(false);
@@ -72,10 +80,11 @@ export default function Home() {
     const handler = setTimeout(() => {
       setDebouncedTitle(title);
       setDebouncedTag(tag);
+      setDebouncedKey(licenseKey);
     }, 300);
 
     return () => clearTimeout(handler);
-  }, [title, tag]);
+  }, [title, tag, licenseKey]);
 
   // 테마 변경 시 즉시 로딩 표시
   const handleThemeChange = (newTheme: "dark" | "gradient" | "minimal" | "terminal") => {
@@ -83,9 +92,13 @@ export default function Home() {
     setTheme(newTheme);
   };
 
+  const keyParam = debouncedKey.trim()
+    ? `&key=${encodeURIComponent(debouncedKey.trim())}`
+    : "";
+
   const ogPath = `/api/og?title=${encodeURIComponent(
     debouncedTitle || "Default Title"
-  )}&tag=${encodeURIComponent(debouncedTag || "TAG")}&theme=${theme}`;
+  )}&tag=${encodeURIComponent(debouncedTag || "TAG")}&theme=${theme}${keyParam}`;
 
   const fullOgUrl = `${origin}${ogPath}`;
 
@@ -179,6 +192,8 @@ export default function Home() {
     },
   ];
 
+  const hasKey = Boolean(licenseKey.trim());
+
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-start p-6 md:p-12 relative overflow-hidden">
       {/* 배경 글로우 효과 */}
@@ -188,13 +203,13 @@ export default function Home() {
       <div className="w-full max-w-5xl mb-10 text-center md:text-left">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
           <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-          Multi-Theme Preview & Export
+          OG Image Studio
         </div>
         <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
           OG Image Generator
         </h1>
         <p className="mt-2 text-slate-400 text-sm md:text-base max-w-xl">
-          다양한 디자인 테마를 선택하고 텍스트를 실시간으로 입력하여 1200×630 Open Graph 이미지를 손쉽게 제작하세요.
+          실시간 텍스트 및 테마 설정으로 1200×630 소셜 썸네일을 제작하고, PRO 키로 워터마크 제거와 프리미엄 테마를 경험하세요.
         </p>
       </div>
 
@@ -223,9 +238,16 @@ export default function Home() {
 
           {/* 디자인 테마 선택 (라디오/그리드 카드 형태) */}
           <div className="space-y-2.5">
-            <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider">
-              디자인 테마 선택
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider">
+                디자인 테마 선택
+              </label>
+              {!hasKey && (
+                <span className="text-[11px] text-amber-400/90 flex items-center gap-1 font-medium">
+                  🔒 PRO 테마 잠김
+                </span>
+              )}
+            </div>
             <div className="grid grid-cols-2 gap-2.5">
               {THEMES.map((t) => {
                 const isSelected = theme === t.id;
@@ -253,18 +275,18 @@ export default function Home() {
                           {t.name}
                         </span>
                       </div>
-                      {isSelected && (
-                        <svg
-                          className="w-4 h-4 text-blue-400"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
+
+                      {/* PRO 테마 뱃지 */}
+                      {t.isPro && (
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-tight flex items-center gap-0.5 ${
+                            hasKey
+                              ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                              : "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                          }`}
                         >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
+                          {hasKey ? "PRO" : "🔒 PRO"}
+                        </span>
                       )}
                     </div>
                     <span className="text-[10px] text-slate-400 line-clamp-1">
@@ -274,6 +296,52 @@ export default function Home() {
                 );
               })}
             </div>
+          </div>
+
+          {/* 라이선스 키 입력 (선택 사항) */}
+          <div className="space-y-2 pt-1 border-t border-slate-800/80">
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="key-input"
+                className="block text-xs font-medium text-slate-300 uppercase tracking-wider flex items-center gap-1.5"
+              >
+                <span>🔑 라이선스 키 (License Key)</span>
+                <span className="text-[10px] text-slate-500 font-normal lowercase">
+                  (선택 사항)
+                </span>
+              </label>
+              {hasKey && (
+                <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
+                  ✓ 키 적용됨
+                </span>
+              )}
+            </div>
+            <input
+              id="key-input"
+              type="password"
+              value={licenseKey}
+              onChange={(e) => setLicenseKey(e.target.value)}
+              placeholder="PRO 라이선스 키를 입력하세요..."
+              className="w-full px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-mono"
+            />
+
+            {/* 무료 유저 가이드 안내 문구 */}
+            {!hasKey ? (
+              <div className="p-3 bg-blue-950/30 border border-blue-500/20 rounded-xl text-[11px] text-blue-300/90 leading-relaxed flex items-start gap-2">
+                <span className="text-base shrink-0">💡</span>
+                <span>
+                  라이선스 키를 입력하면 <strong>워터마크가 제거</strong>되고{" "}
+                  <strong>PRO 테마(Gradient, Terminal)</strong>가 해금됩니다.
+                </span>
+              </div>
+            ) : (
+              <div className="p-3 bg-emerald-950/30 border border-emerald-500/20 rounded-xl text-[11px] text-emerald-300/90 leading-relaxed flex items-start gap-2">
+                <span className="text-base shrink-0">✨</span>
+                <span>
+                  PRO 모드가 활성화되었습니다. 워터마크가 숨겨지고 모든 테마를 자유롭게 생성할 수 있습니다.
+                </span>
+              </div>
+            )}
           </div>
 
           {/* 태그 입력 */}
