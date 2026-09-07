@@ -98,7 +98,7 @@ export default function Home() {
     setTheme(newTheme);
 
     if (!hasKey && (newTheme === "gradient" || newTheme === "terminal")) {
-      showToast("🔒 This theme is PRO only. Unlock lifetime access!");
+      showToast("🔒 Showing PRO Theme Demo Preview. Watermark included.");
     }
   };
 
@@ -509,11 +509,17 @@ export default function Home() {
                 <span className="w-3 h-3 rounded-full bg-red-500/80 inline-block" />
                 <span className="w-3 h-3 rounded-full bg-yellow-500/80 inline-block" />
                 <span className="w-3 h-3 rounded-full bg-green-500/80 inline-block" />
-                <span className="ml-2 text-xs font-medium text-slate-400">
-                  Preview (1200 × 630 px) —{" "}
+                <span className="ml-2 text-xs font-medium text-slate-400 flex items-center gap-2">
+                  <span>Preview (1200 × 630 px)</span>
+                  <span>—</span>
                   <span className="text-blue-400 font-bold uppercase">
                     {theme} THEME
                   </span>
+                  {!hasKey && (theme === "gradient" || theme === "terminal") && (
+                    <span className="px-2 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                      🔒 PRO Preview Mode
+                    </span>
+                  )}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -575,6 +581,14 @@ export default function Home() {
                 className="w-full h-full object-cover transition-opacity duration-300"
                 onLoad={() => setIsLoading(false)}
               />
+
+              {/* Floating Pro Preview Badge */}
+              {!hasKey && (theme === "gradient" || theme === "terminal") && (
+                <div className="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-slate-950/80 backdrop-blur-md border border-purple-500/40 text-purple-200 text-[11px] font-semibold flex items-center gap-1.5 shadow-lg pointer-events-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                  <span>🔒 PRO Preview Mode</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -707,6 +721,16 @@ export default function Home() {
             <p className="text-[11px] text-slate-500 leading-relaxed">
               💡 Paste this tag into your website&apos;s <code className="text-slate-400">&lt;head&gt;</code> section to render rich social preview cards across X (Twitter), LinkedIn, Discord, and Slack.
             </p>
+
+            {/* Pro Preview Notice */}
+            {!hasKey && (theme === "gradient" || theme === "terminal") && (
+              <div className="p-3 bg-purple-950/20 border border-purple-500/30 rounded-xl text-[11px] text-purple-300 flex items-start gap-2">
+                <span className="text-base shrink-0">ℹ️</span>
+                <span>
+                  Rendering in <strong>PRO Demo Mode</strong> (includes demo watermark). Enter a valid license key to remove watermarks for commercial production use.
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
