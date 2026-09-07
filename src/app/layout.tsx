@@ -13,7 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://og-image-generator-wine-nine.vercel.app"),
+  metadataBase: new URL("https://tinyog.cloud"),
+  alternates: {
+    canonical: "https://tinyog.cloud",
+  },
   title: "TinyOG — Lightning-fast Dynamic Social Cards with One URL",
   description:
     "Zero-config Open Graph image generator for developers and bloggers. Preview in real-time and drop dynamic URLs straight into your HTML meta tags.",
@@ -21,11 +24,11 @@ export const metadata: Metadata = {
     title: "TinyOG — Lightning-fast Dynamic Social Cards with One URL",
     description:
       "Zero-config Open Graph image generator for developers and bloggers. Preview in real-time and drop dynamic URLs straight into your HTML meta tags.",
-    url: "https://og-image-generator-wine-nine.vercel.app",
+    url: "https://tinyog.cloud",
     siteName: "TinyOG",
     images: [
       {
-        url: "https://og-image-generator-wine-nine.vercel.app/api/og?title=TinyOG&tag=TOOL",
+        url: "https://tinyog.cloud/api/og?title=TinyOG&tag=TOOL",
         width: 1200,
         height: 630,
         alt: "TinyOG Preview Card",
@@ -40,7 +43,7 @@ export const metadata: Metadata = {
     description:
       "Zero-config Open Graph image generator for developers and bloggers. Preview in real-time and drop dynamic URLs straight into your HTML meta tags.",
     images: [
-      "https://og-image-generator-wine-nine.vercel.app/api/og?title=TinyOG&tag=TOOL",
+      "https://tinyog.cloud/api/og?title=TinyOG&tag=TOOL",
     ],
   },
 };

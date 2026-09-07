@@ -69,7 +69,7 @@ export default function Home() {
   const [htmlCopied, setHtmlCopied] = useState(false);
   const [urlCopied, setUrlCopied] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [origin, setOrigin] = useState("https://example.com");
+  const [origin, setOrigin] = useState("https://tinyog.cloud");
 
   // Retrieve window origin on mount
   useEffect(() => {
@@ -110,9 +110,13 @@ export default function Home() {
     debouncedTitle || "Default Title"
   )}&tag=${encodeURIComponent(debouncedTag || "TAG")}&theme=${theme}${keyParam}`;
 
-  const fullOgUrl = `${origin}${ogPath}`;
+  // Prioritize production domain tinyog.cloud for export snippets when in localhost
+  const exportOrigin =
+    origin && !origin.includes("localhost") ? origin : "https://tinyog.cloud";
 
-  // Generated HTML meta tag snippet
+  const fullOgUrl = `${exportOrigin}${ogPath}`;
+
+  // Generated HTML meta tag snippet with production domain
   const metaTagSnippet = `<meta property="og:image" content="${fullOgUrl}" />`;
 
   const showToast = (message: string) => {
@@ -511,7 +515,7 @@ export default function Home() {
               </button>
             </div>
             <div className="p-3 bg-slate-950/90 border border-slate-800 rounded-xl font-mono text-xs text-slate-400 truncate select-all">
-              {ogPath}
+              {fullOgUrl}
             </div>
           </div>
         </div>
@@ -752,17 +756,17 @@ export default function Home() {
             </a>
             <span>•</span>
             <a
-              href="mailto:support@tinyog.com"
+              href="mailto:support@tinyog.cloud"
               className="hover:text-slate-300 transition-colors"
             >
-              support@tinyog.com
+              support@tinyog.cloud
             </a>
           </div>
         </div>
 
         {/* Bottom footer row: Legal links & Copyright */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-850 text-[11px] text-slate-500">
-          <p>© 2026 TinyOG. All rights reserved. • Built for indie hackers and bloggers.</p>
+          <p>© 2026 TinyOG (tinyog.cloud). All rights reserved. • Built for indie hackers and bloggers.</p>
 
           <div className="flex items-center gap-4 text-slate-400">
             <Link

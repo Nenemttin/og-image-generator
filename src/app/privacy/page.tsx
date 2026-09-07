@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy — TinyOG",
-  description: "Privacy Policy for TinyOG - Dynamic Open Graph Image Generator",
+  description: "Privacy Policy for TinyOG - Dynamic Open Graph Image Generator at tinyog.cloud",
 };
 
 export default function PrivacyPage() {
@@ -43,7 +43,13 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
           <p className="text-xs text-slate-400 mt-2">
-            Last updated: September 7, 2026
+            Last updated: September 7, 2026 • Official Domain:{" "}
+            <a
+              href="https://tinyog.cloud"
+              className="text-purple-400 hover:underline"
+            >
+              https://tinyog.cloud
+            </a>
           </p>
         </header>
 
@@ -52,7 +58,14 @@ export default function PrivacyPage() {
           <section className="flex flex-col gap-2">
             <h2 className="text-lg font-bold text-white">1. Introduction</h2>
             <p>
-              At TinyOG, we strongly value your privacy. We are committed to transparency and collecting only the minimal information necessary to deliver our edge-rendered social card generation service.
+              At TinyOG, accessible from{" "}
+              <a
+                href="https://tinyog.cloud"
+                className="text-purple-400 hover:underline font-medium"
+              >
+                https://tinyog.cloud
+              </a>
+              , we strongly value your privacy. We are committed to transparency and collecting only the minimal information necessary to deliver our edge-rendered social card generation service.
             </p>
           </section>
 
@@ -102,7 +115,14 @@ export default function PrivacyPage() {
           <section className="flex flex-col gap-2">
             <h2 className="text-lg font-bold text-white">6. Your Rights (GDPR / CCPA)</h2>
             <p>
-              Under global data protection laws (such as GDPR and CCPA), you have the right to request access, correction, or deletion of any billing records held by our payment processor. To exercise these rights, please reach out directly to support@tinyog.com.
+              Under global data protection laws (such as GDPR and CCPA), you have the right to request access, correction, or deletion of any billing records held by our payment processor. To exercise these rights, please reach out directly to{" "}
+              <a
+                href="mailto:support@tinyog.cloud"
+                className="text-purple-400 hover:text-purple-300 underline font-medium"
+              >
+                support@tinyog.cloud
+              </a>
+              .
             </p>
           </section>
 
@@ -111,10 +131,10 @@ export default function PrivacyPage() {
             <p>
               If you have any questions or concerns regarding this Privacy Policy, please contact our privacy team at:{" "}
               <a
-                href="mailto:support@tinyog.com"
+                href="mailto:support@tinyog.cloud"
                 className="text-purple-400 hover:text-purple-300 underline font-medium"
               >
-                support@tinyog.com
+                support@tinyog.cloud
               </a>
             </p>
           </section>
@@ -122,7 +142,7 @@ export default function PrivacyPage() {
 
         {/* Footer info */}
         <footer className="mt-8 pt-6 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
-          <span>© 2026 TinyOG. All rights reserved.</span>
+          <span>© 2026 TinyOG (tinyog.cloud). All rights reserved.</span>
           <Link href="/" className="text-slate-400 hover:text-white transition-colors">
             Return to Generator
           </Link>

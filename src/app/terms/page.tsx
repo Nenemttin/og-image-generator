@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Terms of Service — TinyOG",
-  description: "Terms of Service for TinyOG - Dynamic Open Graph Image Generator",
+  description: "Terms of Service for TinyOG - Dynamic Open Graph Image Generator at tinyog.cloud",
 };
 
 export default function TermsPage() {
@@ -43,7 +43,13 @@ export default function TermsPage() {
             Terms of Service
           </h1>
           <p className="text-xs text-slate-400 mt-2">
-            Last updated: September 7, 2026
+            Last updated: September 7, 2026 • Official Domain:{" "}
+            <a
+              href="https://tinyog.cloud"
+              className="text-blue-400 hover:underline"
+            >
+              https://tinyog.cloud
+            </a>
           </p>
         </header>
 
@@ -52,14 +58,22 @@ export default function TermsPage() {
           <section className="flex flex-col gap-2">
             <h2 className="text-lg font-bold text-white">1. Acceptance of Terms</h2>
             <p>
-              By accessing, browsing, or using TinyOG (&quot;the Service&quot;), you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you must discontinue use of the Service immediately.
+              By accessing, browsing, or using TinyOG hosted at{" "}
+              <a
+                href="https://tinyog.cloud"
+                className="text-blue-400 hover:underline font-medium"
+              >
+                https://tinyog.cloud
+              </a>{" "}
+              (&quot;the Service&quot;), you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you must discontinue use of the Service immediately.
             </p>
           </section>
 
           <section className="flex flex-col gap-2">
             <h2 className="text-lg font-bold text-white">2. Description of Service</h2>
             <p>
-              TinyOG is an automated, edge-rendered Open Graph image generation platform that allows users to produce dynamic social share cards and thumbnails using URL parameters and web interfaces.
+              TinyOG is an automated, edge-rendered Open Graph image generation platform operated at{" "}
+              <code className="text-blue-300 font-mono text-xs">https://tinyog.cloud</code> that allows users to produce dynamic social share cards and thumbnails using URL parameters and web interfaces.
             </p>
           </section>
 
@@ -114,10 +128,10 @@ export default function TermsPage() {
             <p>
               For legal inquiries, licensing questions, or support regarding these Terms, please contact us at:{" "}
               <a
-                href="mailto:support@tinyog.com"
+                href="mailto:support@tinyog.cloud"
                 className="text-blue-400 hover:text-blue-300 underline font-medium"
               >
-                support@tinyog.com
+                support@tinyog.cloud
               </a>
             </p>
           </section>
@@ -125,7 +139,7 @@ export default function TermsPage() {
 
         {/* Footer info */}
         <footer className="mt-8 pt-6 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
-          <span>© 2026 TinyOG. All rights reserved.</span>
+          <span>© 2026 TinyOG (tinyog.cloud). All rights reserved.</span>
           <Link href="/" className="text-slate-400 hover:text-white transition-colors">
             Return to Generator
           </Link>

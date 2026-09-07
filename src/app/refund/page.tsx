@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Refund Policy — TinyOG",
-  description: "14-Day Money Back Guarantee and Refund Policy for TinyOG",
+  description: "14-Day Money Back Guarantee and Refund Policy for TinyOG at tinyog.cloud",
 };
 
 export default function RefundPage() {
@@ -43,7 +43,13 @@ export default function RefundPage() {
             Refund Policy
           </h1>
           <p className="text-xs text-slate-400 mt-2">
-            Last updated: September 7, 2026
+            Last updated: September 7, 2026 • Official Domain:{" "}
+            <a
+              href="https://tinyog.cloud"
+              className="text-emerald-400 hover:underline"
+            >
+              https://tinyog.cloud
+            </a>
           </p>
         </header>
 
@@ -74,10 +80,10 @@ export default function RefundPage() {
             <p>
               To request your refund, simply send an email to{" "}
               <a
-                href="mailto:support@tinyog.com"
+                href="mailto:support@tinyog.cloud"
                 className="text-emerald-400 hover:text-emerald-300 font-semibold underline"
               >
-                support@tinyog.com
+                support@tinyog.cloud
               </a>{" "}
               or reply to your Lemon Squeezy purchase confirmation email with:
             </p>
@@ -107,10 +113,10 @@ export default function RefundPage() {
             <p>
               Have questions about your order or need technical support before requesting a refund? We are always here to help:{" "}
               <a
-                href="mailto:support@tinyog.com"
+                href="mailto:support@tinyog.cloud"
                 className="text-emerald-400 hover:text-emerald-300 underline font-medium"
               >
-                support@tinyog.com
+                support@tinyog.cloud
               </a>
             </p>
           </section>
@@ -118,7 +124,7 @@ export default function RefundPage() {
 
         {/* Footer info */}
         <footer className="mt-8 pt-6 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
-          <span>© 2026 TinyOG. All rights reserved.</span>
+          <span>© 2026 TinyOG (tinyog.cloud). All rights reserved.</span>
           <Link href="/" className="text-slate-400 hover:text-white transition-colors">
             Return to Generator
           </Link>
