@@ -14,11 +14,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://og-image-generator-wine-nine.vercel.app"),
-  title: "TinyOG - 1초 만에 만드는 초경량 동적 OG 썸네일",
-  description: "블로거와 개발자를 위한 Zero-config 오픈그래프 카드 자동 생성기",
+  title: "TinyOG — Lightning-fast Dynamic Social Cards with One URL",
+  description:
+    "Zero-config Open Graph image generator for developers and bloggers. Preview in real-time and drop dynamic URLs straight into your HTML meta tags.",
   openGraph: {
-    title: "TinyOG - 1초 만에 만드는 초경량 동적 OG 썸네일",
-    description: "블로거와 개발자를 위한 Zero-config 오픈그래프 카드 자동 생성기",
+    title: "TinyOG — Lightning-fast Dynamic Social Cards with One URL",
+    description:
+      "Zero-config Open Graph image generator for developers and bloggers. Preview in real-time and drop dynamic URLs straight into your HTML meta tags.",
     url: "https://og-image-generator-wine-nine.vercel.app",
     siteName: "TinyOG",
     images: [
@@ -26,16 +28,17 @@ export const metadata: Metadata = {
         url: "https://og-image-generator-wine-nine.vercel.app/api/og?title=TinyOG&tag=TOOL",
         width: 1200,
         height: 630,
-        alt: "TinyOG 미리보기 이미지",
+        alt: "TinyOG Preview Card",
       },
     ],
-    locale: "ko_KR",
+    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TinyOG - 1초 만에 만드는 초경량 동적 OG 썸네일",
-    description: "블로거와 개발자를 위한 Zero-config 오픈그래프 카드 자동 생성기",
+    title: "TinyOG — Lightning-fast Dynamic Social Cards with One URL",
+    description:
+      "Zero-config Open Graph image generator for developers and bloggers. Preview in real-time and drop dynamic URLs straight into your HTML meta tags.",
     images: [
       "https://og-image-generator-wine-nine.vercel.app/api/og?title=TinyOG&tag=TOOL",
     ],
@@ -45,7 +48,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="ko"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>

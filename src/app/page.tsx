@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const CHECKOUT_URL =
   "https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e";
@@ -18,7 +19,7 @@ const THEMES: ThemeOption[] = [
   {
     id: "dark",
     name: "Dark",
-    desc: "클래식 네이비 다크 & 도트 패턴",
+    desc: "Classic navy dark & dot pattern",
     previewClass: "bg-slate-900 border-slate-700",
     badge: "bg-blue-500/20 text-blue-400 border-blue-500/30",
     isPro: false,
@@ -26,7 +27,7 @@ const THEMES: ThemeOption[] = [
   {
     id: "gradient",
     name: "Gradient",
-    desc: "트렌디한 인디고-퍼플 그라디언트",
+    desc: "Trendy indigo-purple mesh",
     previewClass:
       "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 border-purple-400/40",
     badge: "bg-white/25 text-white border-white/40",
@@ -35,7 +36,7 @@ const THEMES: ThemeOption[] = [
   {
     id: "minimal",
     name: "Minimal",
-    desc: "깔끔한 화이트 & 차콜 텍스트",
+    desc: "Clean white & subtle gray typography",
     previewClass: "bg-slate-100 border-slate-300",
     badge: "bg-slate-200 text-slate-800 border-slate-300",
     isPro: false,
@@ -43,7 +44,7 @@ const THEMES: ThemeOption[] = [
   {
     id: "terminal",
     name: "Terminal",
-    desc: "맥 터미널 콘솔 & 신호등 버튼",
+    desc: "Developer console with traffic-light buttons",
     previewClass: "bg-zinc-900 border-zinc-700",
     badge: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
     isPro: true,
@@ -52,7 +53,7 @@ const THEMES: ThemeOption[] = [
 
 export default function Home() {
   const [title, setTitle] = useState(
-    "Next.js 14에서 @vercel/og로 세련된 OG 이미지 생성하기"
+    "How to Generate Dynamic Open Graph Images at the Edge"
   );
   const [tag, setTag] = useState("TUTORIAL");
   const [theme, setTheme] = useState<"dark" | "gradient" | "minimal" | "terminal">(
@@ -70,14 +71,14 @@ export default function Home() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [origin, setOrigin] = useState("https://example.com");
 
-  // 클라이언트 환경에서 현재 origin 획득
+  // Retrieve window origin on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       setOrigin(window.location.origin);
     }
   }, []);
 
-  // 디바운스 처리 (타이핑 시 불필요한 과도 요청 방지)
+  // Debounce text inputs to avoid flooding requests
   useEffect(() => {
     setIsLoading(true);
     const handler = setTimeout(() => {
@@ -91,13 +92,13 @@ export default function Home() {
 
   const hasKey = Boolean(debouncedKey.trim());
 
-  // 테마 변경 시 로딩 표시 및 PRO 테마 넛지
+  // Handle theme switch and prompt nudge for Pro themes
   const handleThemeChange = (newTheme: "dark" | "gradient" | "minimal" | "terminal") => {
     setIsLoading(true);
     setTheme(newTheme);
 
     if (!hasKey && (newTheme === "gradient" || newTheme === "terminal")) {
-      showToast("🔒 이 테마는 PRO 전용입니다. 평생 이용권으로 해금해보세요!");
+      showToast("🔒 This theme is PRO only. Unlock lifetime access!");
     }
   };
 
@@ -111,7 +112,7 @@ export default function Home() {
 
   const fullOgUrl = `${origin}${ogPath}`;
 
-  // 요구된 메타 태그 HTML 코드
+  // Generated HTML meta tag snippet
   const metaTagSnippet = `<meta property="og:image" content="${fullOgUrl}" />`;
 
   const showToast = (message: string) => {
@@ -121,45 +122,45 @@ export default function Home() {
     }, 2800);
   };
 
-  // HTML 메타 태그 복사
+  // Copy HTML Meta Tag to clipboard
   const handleCopyHtml = async () => {
     try {
       await navigator.clipboard.writeText(metaTagSnippet);
       setHtmlCopied(true);
-      showToast("TinyOG 메타 태그가 클립보드에 복사되었습니다!");
+      showToast("Copied to clipboard!");
       setTimeout(() => setHtmlCopied(false), 2000);
     } catch {
-      showToast("복사에 실패했습니다.");
+      showToast("Failed to copy to clipboard.");
     }
   };
 
-  // 이미지 URL 복사
+  // Copy Image URL to clipboard
   const handleCopyUrl = async () => {
     try {
       await navigator.clipboard.writeText(fullOgUrl);
       setUrlCopied(true);
-      showToast("TinyOG 이미지 URL이 클립보드에 복사되었습니다!");
+      showToast("Image URL copied to clipboard!");
       setTimeout(() => setUrlCopied(false), 2000);
     } catch {
-      showToast("복사에 실패했습니다.");
+      showToast("Failed to copy image URL.");
     }
   };
 
-  // PNG 이미지 다운로드
+  // Download rendered PNG image
   const handleDownload = async () => {
     try {
       setIsDownloading(true);
       const response = await fetch(ogPath);
-      if (!response.ok) throw new Error("이미지 다운로드 실패");
+      if (!response.ok) throw new Error("Image download failed");
 
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = blobUrl;
 
-      // 파일명 안전 처리
+      // Sanitize filename
       const safeTitle = (debouncedTitle || "thumbnail")
-        .replace(/[^a-zA-Z0-9가-힣\s-_]/g, "")
+        .replace(/[^a-zA-Z0-9\s-_]/g, "")
         .trim()
         .slice(0, 30);
       link.download = `tinyog-${safeTitle || "thumbnail"}-${theme}.png`;
@@ -169,10 +170,10 @@ export default function Home() {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
 
-      showToast("PNG 이미지가 성공적으로 다운로드되었습니다!");
+      showToast("PNG image downloaded successfully!");
     } catch (error) {
       console.error(error);
-      showToast("이미지 다운로드 중 오류가 발생했습니다.");
+      showToast("Failed to download image.");
     } finally {
       setIsDownloading(false);
     }
@@ -180,41 +181,41 @@ export default function Home() {
 
   const presets = [
     {
-      title: "TinyOG: 링크 하나로 끝나는 초경량 동적 썸네일",
-      tag: "RELEASE",
+      title: "Building High-Performance Web Apps with Next.js 14",
+      tag: "FRONTEND",
       theme: "dark" as const,
     },
     {
-      title: "Zero-config Open Graph Image Generation at the Edge",
-      tag: "PERF",
+      title: "Zero-Config Open Graph Image Generation at the Edge",
+      tag: "VERCEL / OG",
       theme: "gradient" as const,
     },
     {
-      title: "클린 코드를 지향하는 프론트엔드 개발 가이드",
-      tag: "MINIMAL",
+      title: "Clean Code Principles for Modern Frontend Teams",
+      tag: "GUIDE",
       theme: "minimal" as const,
     },
     {
-      title: "git commit -m 'Release TinyOG v1.0 with Edge Runtime'",
+      title: "git commit -m 'Ship TinyOG v1.0 to Production'",
       tag: "CLI",
       theme: "terminal" as const,
     },
   ];
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-start p-6 md:p-12 relative overflow-hidden">
-      {/* 배경 글로우 효과 */}
+    <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-start p-6 md:p-12 relative overflow-hidden font-sans">
+      {/* Background radial glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none -z-10" />
 
-      {/* 상단 네비게이션 헤더 */}
-      <header className="w-full max-w-5xl mb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
+      {/* Top Navigation Header */}
+      <header className="w-full max-w-5xl mb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-2">
             <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-            Ultra-Fast OG Maker
+            ULTRA-FAST OG MAKER
           </div>
 
-          {/* 로고 & 뱃지 */}
+          {/* Logo & Badges */}
           <div className="flex items-center gap-3">
             <h1 className="text-3xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
               TinyOG
@@ -230,7 +231,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 상단 우측 PRO 구매 버튼 (Lemon Squeezy 결제 링크) */}
+        {/* Top Right Checkout CTA */}
         <div className="flex flex-col sm:items-end gap-1.5 w-full sm:w-auto">
           <div className="flex items-center gap-2">
             <span className="hidden sm:inline-flex text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold uppercase tracking-wider animate-pulse">
@@ -262,53 +263,40 @@ export default function Home() {
             </a>
           </div>
           <span className="text-[11px] text-slate-400 text-left sm:text-right">
-            평생 무제한 워터마크 제거 &amp; PRO 테마 언락
+            Lifetime watermark removal &amp; all PRO themes unlocked
           </span>
         </div>
       </header>
 
-      {/* 메인 서브 카피 */}
+      {/* Main Headline & Subtitle */}
       <div className="w-full max-w-5xl mb-8">
-        <p className="text-slate-300 text-base md:text-xl font-semibold">
-          TinyOG — 링크 하나로 끝나는 초경량 동적 소셜 썸네일
-        </p>
-        <p className="mt-1 text-slate-400 text-xs md:text-sm max-w-2xl">
-          블로거와 개발자를 위한 Zero-config 오픈그래프 카드 자동 생성기입니다. 실시간 미리보기로 확인하고 HTML 메타 태그 또는 이미지를 바로 내보내세요.
+        <h2 className="text-xl md:text-3xl font-extrabold tracking-tight text-white">
+          TinyOG — Lightning-fast Dynamic Social Cards with One URL
+        </h2>
+        <p className="mt-2 text-slate-400 text-sm md:text-base max-w-3xl leading-relaxed">
+          Zero-config Open Graph image generator for developers and bloggers. Preview in real-time and drop dynamic URLs straight into your HTML meta tags.
         </p>
       </div>
 
       <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* 입력 컨트롤 패널 */}
+        {/* Settings & Inputs Panel */}
         <div className="lg:col-span-5 bg-slate-900/80 border border-slate-800 backdrop-blur-xl rounded-2xl p-6 shadow-2xl flex flex-col gap-6">
           <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
-            <h2 className="text-lg font-semibold text-slate-200 flex items-center gap-2">
-              <svg
-                className="w-5 h-5 text-blue-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
-              속성 &amp; 테마 설정
-            </h2>
-            <span className="text-xs text-slate-500">실시간 연동 중</span>
+            <h3 className="text-sm font-bold text-slate-200 flex items-center gap-2">
+              ⚙️ Settings &amp; Themes
+            </h3>
+            <span className="text-xs text-slate-500 font-medium">Live Preview Sync</span>
           </div>
 
-          {/* 디자인 테마 선택 */}
+          {/* Theme Selection */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider">
-                디자인 테마 선택
+              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                Select Theme
               </label>
               {!hasKey && (
                 <span className="text-[11px] text-amber-400/90 flex items-center gap-1 font-medium">
-                  🔒 PRO 테마 잠김
+                  🔒 PRO Themes Locked
                 </span>
               )}
             </div>
@@ -340,7 +328,7 @@ export default function Home() {
                         </span>
                       </div>
 
-                      {/* PRO 테마 뱃지 */}
+                      {/* PRO Theme Badge */}
                       {t.isPro && (
                         <span
                           className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-tight flex items-center gap-0.5 ${
@@ -361,17 +349,17 @@ export default function Home() {
               })}
             </div>
 
-            {/* Pro 테마 선택 시 넛지 배너 */}
+            {/* Pro Theme Nudge Banner */}
             {!hasKey && (theme === "gradient" || theme === "terminal") && (
               <div className="mt-3 p-3.5 bg-gradient-to-r from-purple-950/40 via-indigo-950/40 to-slate-900 border border-purple-500/40 rounded-xl flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="flex items-start gap-2">
                   <span className="text-base shrink-0">🔒</span>
                   <div className="text-xs text-purple-200 leading-relaxed">
                     <strong className="text-white font-semibold">
-                      선택하신 {theme.toUpperCase()} 테마는 PRO 전용입니다.
+                      The {theme.toUpperCase()} theme is a PRO feature.
                     </strong>
                     <p className="text-purple-300/80 text-[11px] mt-0.5">
-                      워터마크 제거와 함께 평생 이용권을 구매해보세요.
+                      Remove watermarks and unlock all premium styles with lifetime access.
                     </p>
                   </div>
                 </div>
@@ -381,28 +369,25 @@ export default function Home() {
                   rel="noreferrer"
                   className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-xs text-center shadow-md shadow-purple-600/30 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5"
                 >
-                  <span>평생 이용권 구매하기 ($29)</span>
+                  <span>Get Lifetime Pass ($29)</span>
                   <span>→</span>
                 </a>
               </div>
             )}
           </div>
 
-          {/* 라이선스 키 입력 필드 */}
+          {/* License Key Field */}
           <div className="space-y-2 pt-2 border-t border-slate-800/80">
             <div className="flex items-center justify-between">
               <label
                 htmlFor="key-input"
-                className="block text-xs font-medium text-slate-300 uppercase tracking-wider flex items-center gap-1.5"
+                className="block text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5"
               >
-                <span>🔑 라이선스 키 (License Key)</span>
-                <span className="text-[10px] text-slate-500 font-normal lowercase">
-                  (선택 사항)
-                </span>
+                <span>🔑 LICENSE KEY (Optional)</span>
               </label>
               {hasKey && (
                 <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
-                  ✓ 키 적용됨
+                  ✓ Key Verified
                 </span>
               )}
             </div>
@@ -411,11 +396,11 @@ export default function Home() {
               type="password"
               value={licenseKey}
               onChange={(e) => setLicenseKey(e.target.value)}
-              placeholder="Lemon Squeezy 라이선스 키를 입력하세요..."
+              placeholder="Enter your Lemon Squeezy license key..."
               className="w-full px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all font-mono"
             />
 
-            {/* 키 미소유자 결제 링크 안내 */}
+            {/* License CTA Link */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] pt-1 px-1">
               <span className="text-slate-400">Don&apos;t have a key yet?</span>
               <a
@@ -431,65 +416,65 @@ export default function Home() {
               </a>
             </div>
 
-            {/* 안내 문구 */}
+            {/* Status Guide Banners */}
             {!hasKey ? (
               <div className="mt-2 p-3 bg-blue-950/30 border border-blue-500/20 rounded-xl text-[11px] text-blue-300/90 leading-relaxed flex items-start gap-2">
                 <span className="text-base shrink-0">💡</span>
                 <span>
-                  라이선스 키를 입력하면 <strong>워터마크가 제거</strong>되고{" "}
-                  <strong>PRO 테마(Gradient, Terminal)</strong>가 해금됩니다.
+                  Enter a license key to <strong>remove the watermark</strong> and{" "}
+                  <strong>unlock all PRO themes (Gradient, Terminal)</strong>.
                 </span>
               </div>
             ) : (
               <div className="mt-2 p-3 bg-emerald-950/30 border border-emerald-500/20 rounded-xl text-[11px] text-emerald-300/90 leading-relaxed flex items-start gap-2">
                 <span className="text-base shrink-0">✨</span>
                 <span>
-                  TinyOG PRO 모드가 활성화되었습니다. 워터마크가 숨겨지고 모든 테마를 자유롭게 생성할 수 있습니다.
+                  TinyOG PRO Mode Active. Watermark is removed and all premium themes are unlocked.
                 </span>
               </div>
             )}
           </div>
 
-          {/* 태그 입력 */}
+          {/* TAG Input */}
           <div className="space-y-2">
             <label
               htmlFor="tag-input"
-              className="block text-xs font-medium text-slate-300 uppercase tracking-wider"
+              className="block text-xs font-bold text-slate-300 uppercase tracking-wider"
             >
-              태그 (Tag)
+              TAG
             </label>
             <input
               id="tag-input"
               type="text"
               value={tag}
               onChange={(e) => setTag(e.target.value)}
-              placeholder="예: TUTORIAL, NEWS, DEV"
+              placeholder="e.g. TUTORIAL, RELEASE, DEV"
               className="w-full px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
             />
           </div>
 
-          {/* 제목 입력 */}
+          {/* TITLE Input */}
           <div className="space-y-2">
             <label
               htmlFor="title-input"
-              className="block text-xs font-medium text-slate-300 uppercase tracking-wider"
+              className="block text-xs font-bold text-slate-300 uppercase tracking-wider"
             >
-              제목 (Title)
+              TITLE
             </label>
             <textarea
               id="title-input"
               rows={4}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="OG 이미지에 들어갈 제목을 입력하세요..."
+              placeholder="Enter your Open Graph title here..."
               className="w-full px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all resize-none leading-relaxed"
             />
           </div>
 
-          {/* 추천 프리셋 */}
+          {/* Sample Presets */}
           <div className="space-y-2 pt-2">
-            <label className="block text-xs font-medium text-slate-400">
-              샘플 프리셋 적용하기
+            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+              TRY SAMPLE PRESETS
             </label>
             <div className="flex flex-wrap gap-2">
               {presets.map((preset, idx) => (
@@ -505,22 +490,24 @@ export default function Home() {
                   className="text-xs px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-300 transition-all hover:text-white flex items-center gap-1.5"
                 >
                   <span>{preset.tag}</span>
-                  <span className="text-[10px] text-slate-500">({preset.theme})</span>
+                  <span className="text-[10px] text-slate-500 uppercase">
+                    ({preset.theme})
+                  </span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* 엔드포인트 URL 정보 */}
+          {/* Endpoint URL Box */}
           <div className="pt-4 border-t border-slate-800/80 space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-400">
-              <span>TinyOG 엔드포인트 URL</span>
+              <span className="font-medium">Direct Image Endpoint</span>
               <button
                 type="button"
                 onClick={handleCopyUrl}
                 className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
               >
-                {urlCopied ? "✓ URL 복사됨!" : "URL 복사"}
+                {urlCopied ? "✓ URL Copied!" : "Copy URL"}
               </button>
             </div>
             <div className="p-3 bg-slate-950/90 border border-slate-800 rounded-xl font-mono text-xs text-slate-400 truncate select-all">
@@ -529,9 +516,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 실시간 미리보기 및 메타 태그 복사 영역 */}
+        {/* Real-time Preview & Export Panel */}
         <div className="lg:col-span-7 flex flex-col gap-6">
-          {/* 이미지 미리보기 카드 */}
+          {/* Preview Card */}
           <div className="bg-slate-900/80 border border-slate-800 backdrop-blur-xl rounded-2xl p-6 shadow-2xl flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -539,9 +526,9 @@ export default function Home() {
                 <span className="w-3 h-3 rounded-full bg-yellow-500/80 inline-block" />
                 <span className="w-3 h-3 rounded-full bg-green-500/80 inline-block" />
                 <span className="ml-2 text-xs font-medium text-slate-400">
-                  TinyOG 미리보기 (1200 × 630 px) —{" "}
-                  <span className="text-blue-400 font-semibold uppercase">
-                    {theme} 테마
+                  Preview (1200 × 630 px) —{" "}
+                  <span className="text-blue-400 font-bold uppercase">
+                    {theme} THEME
                   </span>
                 </span>
               </div>
@@ -567,16 +554,16 @@ export default function Home() {
                         d="M4 12a8 8 0 018-8v8H4z"
                       />
                     </svg>
-                    렌더링 중...
+                    Rendering...
                   </span>
                 )}
                 <a
                   href={ogPath}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all flex items-center gap-1"
+                  className="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all flex items-center gap-1 font-medium"
                 >
-                  새 탭
+                  Open in New Tab
                   <svg
                     className="w-3.5 h-3.5"
                     fill="none"
@@ -594,7 +581,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* 이미지 프레임 (1200:630 종횡비) */}
+            {/* Scaled Preview Frame (1200:630 Aspect Ratio) */}
             <div className="relative w-full aspect-[1200/630] rounded-xl overflow-hidden bg-slate-950 border border-slate-800 flex items-center justify-center group shadow-inner">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -607,7 +594,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 메타 태그 코드 박스 및 액션 버튼 카드 */}
+          {/* HTML Meta Tag Export Card */}
           <div className="bg-slate-900/80 border border-slate-800 backdrop-blur-xl rounded-2xl p-6 shadow-2xl flex flex-col gap-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
               <div className="flex items-center gap-2">
@@ -624,14 +611,14 @@ export default function Home() {
                     d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
                   />
                 </svg>
-                <h3 className="text-sm font-semibold text-slate-200">
-                  HTML 메타 태그 &amp; 내보내기
+                <h3 className="text-sm font-bold text-slate-200">
+                  HTML Meta Tag &amp; Export
                 </h3>
               </div>
 
-              {/* 액션 버튼 그룹 */}
+              {/* Action Buttons */}
               <div className="flex items-center gap-2">
-                {/* HTML 복사하기 버튼 */}
+                {/* Copy Meta Tag */}
                 <button
                   type="button"
                   onClick={handleCopyHtml}
@@ -652,7 +639,7 @@ export default function Home() {
                           d="M5 13l4 4L19 7"
                         />
                       </svg>
-                      복사됨!
+                      Copied!
                     </>
                   ) : (
                     <>
@@ -669,12 +656,12 @@ export default function Home() {
                           d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
                         />
                       </svg>
-                      HTML 복사하기
+                      Copy Meta Tag
                     </>
                   )}
                 </button>
 
-                {/* 이미지 다운로드 버튼 */}
+                {/* Download PNG Button */}
                 <button
                   type="button"
                   onClick={handleDownload}
@@ -702,7 +689,7 @@ export default function Home() {
                           d="M4 12a8 8 0 018-8v8H4z"
                         />
                       </svg>
-                      저장 중...
+                      Saving...
                     </>
                   ) : (
                     <>
@@ -719,58 +706,90 @@ export default function Home() {
                           d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                         />
                       </svg>
-                      이미지 다운로드
+                      Download PNG
                     </>
                   )}
                 </button>
               </div>
             </div>
 
-            {/* HTML 코드 박스 */}
+            {/* Code Snippet Box */}
             <div className="relative group">
               <pre className="p-4 bg-slate-950/90 border border-slate-800 rounded-xl font-mono text-xs text-blue-300 select-all overflow-x-auto whitespace-pre-wrap break-all leading-relaxed shadow-inner">
                 {metaTagSnippet}
               </pre>
             </div>
 
-            <p className="text-[11px] text-slate-500">
-              💡 TinyOG 메타 태그를 웹사이트의 <code className="text-slate-400">&lt;head&gt;</code> 태그 내에 붙여넣으면 소셜 미디어(X, 카카오톡, 슬랙 등)에서 풍부한 미리보기가 표시됩니다.
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              💡 Paste this tag into your website&apos;s <code className="text-slate-400">&lt;head&gt;</code> section to render rich social preview cards across X (Twitter), LinkedIn, Discord, and Slack.
             </p>
           </div>
         </div>
       </div>
 
-      {/* 푸터 영역 (Lemon Squeezy 심사 요건) */}
-      <footer className="w-full max-w-5xl mt-16 pt-8 border-t border-slate-800/80 text-center flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-          <span className="font-semibold text-slate-300">TinyOG</span>
-          <span>•</span>
-          <span>Lifetime Pass</span>
-          <span>•</span>
-          <span>One-time payment $29</span>
-          <span>•</span>
-          <span className="text-emerald-400 font-medium">14-day refund guarantee</span>
+      {/* Global Footer with Lemon Squeezy Compliance Links */}
+      <footer className="w-full max-w-5xl mt-20 pt-8 border-t border-slate-800/80 flex flex-col gap-5 text-xs text-slate-500">
+        {/* Top footer row: Service & Guarantee specs */}
+        <div className="flex flex-wrap items-center justify-between gap-3 text-slate-400 text-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-bold text-slate-200">TinyOG</span>
+            <span>•</span>
+            <span>Lifetime Pass</span>
+            <span>•</span>
+            <span>One-time payment $29</span>
+            <span>•</span>
+            <span className="text-emerald-400 font-semibold">14-day money-back guarantee</span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <a
+              href={CHECKOUT_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+            >
+              Buy Lifetime Pass ($29) →
+            </a>
+            <span>•</span>
+            <a
+              href="mailto:support@tinyog.com"
+              className="hover:text-slate-300 transition-colors"
+            >
+              support@tinyog.com
+            </a>
+          </div>
         </div>
-        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 text-slate-400 text-[11px]">
-          <a
-            href={CHECKOUT_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
-          >
-            Buy Lifetime Pass ($29)
-          </a>
-          <span>•</span>
-          <a
-            href="mailto:support@tinyog.com"
-            className="hover:text-slate-200 transition-colors"
-          >
-            Support: support@tinyog.com
-          </a>
+
+        {/* Bottom footer row: Legal links & Copyright */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-850 text-[11px] text-slate-500">
+          <p>© 2026 TinyOG. All rights reserved. • Built for indie hackers and bloggers.</p>
+
+          <div className="flex items-center gap-4 text-slate-400">
+            <Link
+              href="/terms"
+              className="hover:text-white transition-colors underline-offset-2 hover:underline"
+            >
+              Terms of Service
+            </Link>
+            <span>•</span>
+            <Link
+              href="/privacy"
+              className="hover:text-white transition-colors underline-offset-2 hover:underline"
+            >
+              Privacy Policy
+            </Link>
+            <span>•</span>
+            <Link
+              href="/refund"
+              className="hover:text-white transition-colors underline-offset-2 hover:underline"
+            >
+              Refund Policy
+            </Link>
+          </div>
         </div>
       </footer>
 
-      {/* 플로팅 토스트 알림 */}
+      {/* Floating Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-900/95 border border-purple-500/40 text-slate-100 shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-3 duration-200">
           <svg
