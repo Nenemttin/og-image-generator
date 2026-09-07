@@ -11,8 +11,6 @@ type ThemeOption = {
   name: "Dark" | "Gradient" | "Minimal" | "Terminal";
   desc: string;
   previewClass: string;
-  glowClass: string;
-  badge: string;
   isPro?: boolean;
 };
 
@@ -20,38 +18,29 @@ const THEMES: ThemeOption[] = [
   {
     id: "dark",
     name: "Dark",
-    desc: "Classic navy & dot matrix grid",
-    previewClass: "bg-slate-900 border-slate-700",
-    glowClass: "shadow-[0_20px_60px_-15px_rgba(59,130,246,0.3)]",
-    badge: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+    desc: "Classic navy & matrix grid",
+    previewClass: "bg-zinc-900 border-zinc-700",
     isPro: false,
   },
   {
     id: "gradient",
     name: "Gradient",
-    desc: "Trendy indigo-purple tech mesh",
-    previewClass:
-      "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 border-purple-400/40",
-    glowClass: "shadow-[0_25px_70px_-15px_rgba(147,51,234,0.4)]",
-    badge: "bg-white/25 text-white border-white/40",
+    desc: "Vibrant tech mesh gradient",
+    previewClass: "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 border-zinc-600",
     isPro: true,
   },
   {
     id: "minimal",
     name: "Minimal",
-    desc: "Editorial white & subtle typography",
-    previewClass: "bg-slate-100 border-slate-300",
-    glowClass: "shadow-[0_20px_60px_-15px_rgba(255,255,255,0.12)]",
-    badge: "bg-slate-200 text-slate-800 border-slate-300",
+    desc: "Clean editorial white typography",
+    previewClass: "bg-zinc-100 border-zinc-300",
     isPro: false,
   },
   {
     id: "terminal",
     name: "Terminal",
-    desc: "macOS console with command prompt",
-    previewClass: "bg-zinc-900 border-zinc-700",
-    glowClass: "shadow-[0_25px_70px_-15px_rgba(34,197,94,0.25)]",
-    badge: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
+    desc: "macOS developer console",
+    previewClass: "bg-zinc-950 border-zinc-700",
     isPro: true,
   },
 ];
@@ -80,7 +69,7 @@ export default function Home() {
   const [displayedImgUrl, setDisplayedImgUrl] = useState("");
   const [isImageLoading, setIsImageLoading] = useState(true);
 
-  // Micro-interaction action button states
+  // Action button feedback states
   const [htmlCopied, setHtmlCopied] = useState(false);
   const [urlCopied, setUrlCopied] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -100,12 +89,12 @@ export default function Home() {
           setLicenseKey(savedKey);
         }
       } catch {
-        // localStorage not available
+        // localStorage unavailable
       }
     }
   }, []);
 
-  // Debounce text inputs (300ms)
+  // Debounce inputs (300ms)
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedTitle(title);
@@ -149,7 +138,7 @@ export default function Home() {
           } catch {
             // ignore
           }
-          showToast("✨ PRO License Verified! Watermark removed.");
+          showToast("PRO License Active — Watermarks removed.");
         } else {
           setLicenseStatus("invalid");
           setIsProVerified(false);
@@ -165,7 +154,6 @@ export default function Home() {
     return () => controller.abort();
   }, [debouncedKey]);
 
-  // Current calculated endpoint URL
   const effectiveTitle = debouncedTitle.trim() || "Your Dynamic Title Goes Here";
   const effectiveTag = debouncedTag.trim() || "ARTICLE";
   const keyParam = debouncedKey.trim()
@@ -176,7 +164,6 @@ export default function Home() {
     effectiveTitle
   )}&tag=${encodeURIComponent(effectiveTag)}&theme=${theme}${keyParam}`;
 
-  // Prioritize production domain tinyog.cloud for export snippets
   const exportOrigin =
     origin && !origin.includes("localhost") ? origin : "https://tinyog.cloud";
 
@@ -198,7 +185,6 @@ export default function Home() {
     };
   }, [ogPath]);
 
-  // Toast notification helper
   const showToast = (message: string) => {
     setToastMessage(message);
     setTimeout(() => {
@@ -206,41 +192,37 @@ export default function Home() {
     }, 2800);
   };
 
-  // Theme selection handler
   const handleThemeChange = (
     newTheme: "dark" | "gradient" | "minimal" | "terminal"
   ) => {
     setTheme(newTheme);
     if (!isProVerified && (newTheme === "gradient" || newTheme === "terminal")) {
-      showToast("🔒 Showing PRO Theme Demo. Demo watermark included.");
+      showToast("Showing PRO Theme Demo (Watermarked)");
     }
   };
 
-  // Copy HTML Meta Tag
   const handleCopyHtml = async () => {
     try {
       await navigator.clipboard.writeText(metaTagSnippet);
       setHtmlCopied(true);
-      showToast("✓ HTML Meta Tag copied to clipboard!");
-      setTimeout(() => setHtmlCopied(false), 2200);
+      showToast("HTML Meta Tag copied to clipboard");
+      setTimeout(() => setHtmlCopied(false), 2000);
     } catch {
-      showToast("Failed to copy to clipboard.");
+      showToast("Failed to copy to clipboard");
     }
   };
 
-  // Copy Image URL
   const handleCopyUrl = async () => {
     try {
       await navigator.clipboard.writeText(fullOgUrl);
       setUrlCopied(true);
-      showToast("✓ Image URL copied to clipboard!");
-      setTimeout(() => setUrlCopied(false), 2200);
+      showToast("Image URL copied to clipboard");
+      setTimeout(() => setUrlCopied(false), 2000);
     } catch {
-      showToast("Failed to copy image URL.");
+      showToast("Failed to copy image URL");
     }
   };
 
-  // Download rendered PNG image
   const handleDownload = async () => {
     try {
       setIsDownloading(true);
@@ -252,7 +234,7 @@ export default function Home() {
       const link = document.createElement("a");
       link.href = blobUrl;
 
-      const safeTitle = (debouncedTitle || "thumbnail")
+      const safeTitle = (debouncedTitle || "social-card")
         .replace(/[^a-zA-Z0-9\s-_]/g, "")
         .trim()
         .slice(0, 30);
@@ -264,11 +246,11 @@ export default function Home() {
       window.URL.revokeObjectURL(blobUrl);
 
       setDownloadSuccess(true);
-      showToast("✓ PNG image downloaded successfully!");
+      showToast("PNG image downloaded successfully");
       setTimeout(() => setDownloadSuccess(false), 2500);
     } catch (error) {
       console.error(error);
-      showToast("Failed to download image.");
+      showToast("Failed to download image");
     } finally {
       setIsDownloading(false);
     }
@@ -297,45 +279,38 @@ export default function Home() {
     },
   ];
 
-  const activeThemeConfig =
-    THEMES.find((t) => t.id === theme) || THEMES[0];
-  const isCurrentThemePro =
-    theme === "gradient" || theme === "terminal";
+  const isCurrentThemePro = theme === "gradient" || theme === "terminal";
   const isDemoMode = isCurrentThemePro && !isProVerified;
 
   return (
-    <main className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col items-center justify-start p-4 sm:p-6 md:p-12 relative overflow-hidden font-sans selection:bg-purple-500/30 selection:text-purple-200">
-      {/* Background ambient lighting */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[450px] bg-gradient-to-b from-indigo-600/15 via-purple-600/10 to-transparent blur-[140px] rounded-full pointer-events-none -z-10" />
-      <div className="absolute top-[20%] right-0 w-[500px] h-[500px] bg-blue-600/10 blur-[150px] rounded-full pointer-events-none -z-10" />
-
+    <main className="min-h-screen bg-[#09090b] text-[#f4f4f5] flex flex-col items-center justify-start p-4 sm:p-6 md:p-12 relative font-sans selection:bg-zinc-800 selection:text-zinc-100">
       {/* Top Navigation Header */}
-      <header className="w-full max-w-6xl mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
+      <header className="w-full max-w-6xl mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-[#27272a]">
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[11px] font-bold uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px] font-mono uppercase tracking-wider">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               EDGE OG ENGINE
             </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-slate-800/80 border border-slate-700 text-slate-300 font-mono font-semibold">
+            <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 font-mono font-medium">
               v1.0
             </span>
           </div>
 
           {/* Logo & Status Badges */}
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#fafafa]">
               TinyOG
             </h1>
 
             {isProVerified ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold tracking-wider shadow-sm uppercase animate-in fade-in">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-900 border border-emerald-500/50 text-emerald-400 text-[11px] font-mono tracking-wide uppercase">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 LIFETIME PASS ACTIVE
               </span>
             ) : (
-              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-400/30 text-purple-300 font-bold tracking-wider shadow-sm uppercase">
-                PRO DEMO AVAILABLE
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400 font-mono tracking-wider uppercase">
+                BETA
               </span>
             )}
           </div>
@@ -345,89 +320,74 @@ export default function Home() {
         <div className="flex flex-col sm:items-end gap-1.5 w-full sm:w-auto">
           {!isProVerified ? (
             <div className="flex items-center gap-2.5 w-full sm:w-auto">
-              <span className="hidden sm:inline-flex text-[10px] px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold uppercase tracking-wider animate-pulse">
-                ⚡ LTD 50% OFF
+              <span className="hidden sm:inline-flex text-[10px] px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 font-mono font-semibold uppercase tracking-wider">
+                LTD 50% OFF
               </span>
               <a
                 href={CHECKOUT_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 hover:from-indigo-400 hover:via-purple-500 hover:to-pink-500 text-white font-bold text-xs md:text-sm shadow-xl shadow-purple-600/30 border border-purple-400/40 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 group"
+                className="w-full sm:w-auto px-4 py-2 rounded-lg bg-white hover:bg-[#e4e4e7] text-black font-semibold text-xs transition-colors duration-150 flex items-center justify-center gap-1.5 active:scale-95 shadow-sm"
               >
-                <svg
-                  className="w-4 h-4 text-purple-200 group-hover:rotate-12 transition-transform"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
                 <span>Get Lifetime Pass ($29)</span>
-                <span className="transition-transform group-hover:translate-x-1">
-                  →
-                </span>
+                <span>→</span>
               </a>
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-xs text-emerald-400 font-semibold px-3 py-1.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30">
+            <div className="flex items-center gap-2 text-xs text-emerald-400 font-mono px-3 py-1 rounded bg-zinc-900 border border-emerald-500/30">
               <span>✓ Verified Customer</span>
               <span>•</span>
-              <span className="text-slate-300 font-normal">Commercial License</span>
+              <span className="text-zinc-400 font-sans">Commercial License</span>
             </div>
           )}
-          <span className="text-[11px] text-slate-400 text-left sm:text-right flex items-center gap-1">
-            <span className="text-emerald-400 font-medium">✓</span> Zero recurring fees • 14-day money-back guarantee
+          <span className="text-[11px] text-zinc-500 text-left sm:text-right flex items-center gap-1 font-mono">
+            <span>✓</span> 14-day refund guarantee • No recurring fees
           </span>
         </div>
       </header>
 
       {/* Main Headline */}
       <div className="w-full max-w-6xl mb-8">
-        <h2 className="text-xl md:text-2xl lg:text-3xl font-extrabold tracking-tight text-white leading-snug">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#fafafa] leading-snug">
           Lightning-fast Dynamic Social Cards with One URL
         </h2>
-        <p className="mt-1.5 text-slate-400 text-sm md:text-base max-w-3xl leading-relaxed">
-          Zero-config Open Graph card generator for developers and bloggers. Preview in real-time, test all themes, and drop edge-cached dynamic URLs straight into your HTML meta tags.
+        <p className="mt-1 text-zinc-400 text-xs sm:text-sm max-w-2xl leading-relaxed">
+          Zero-config Open Graph card generator for developers and bloggers. Preview in real-time, test all themes, and drop edge-cached URLs straight into your HTML meta tags.
         </p>
       </div>
 
       {/* Main App Grid */}
-      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Side: Editor & Settings Panel (5 cols) */}
-        <div className="lg:col-span-5 bg-slate-900/90 border border-slate-800/80 backdrop-blur-2xl rounded-2xl p-6 shadow-2xl flex flex-col gap-6">
-          <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
-            <h3 className="text-sm font-bold text-slate-200 flex items-center gap-2">
-              <span className="text-blue-400">⚙️</span> Settings &amp; Themes
+        <div className="lg:col-span-5 bg-[#121215] border border-[#27272a] rounded-xl p-5 sm:p-6 flex flex-col gap-6">
+          <div className="flex items-center justify-between border-b border-[#27272a] pb-3.5">
+            <h3 className="text-xs font-bold text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+              Settings &amp; Themes
             </h3>
-            <div className="flex items-center gap-1.5 text-xs text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Live Edge Sync</span>
+            <div className="flex items-center gap-1.5 text-xs text-zinc-400 font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>Edge Sync</span>
             </div>
           </div>
 
           {/* Theme Selection Section */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+              <label className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider font-mono">
                 Select Theme
               </label>
               {isProVerified ? (
-                <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
-                  ✓ All Themes Unlocked
+                <span className="text-[10px] text-emerald-400 font-mono">
+                  ✓ Pro Active
                 </span>
               ) : (
-                <span className="text-[11px] text-purple-400 font-medium flex items-center gap-1">
-                  ✨ 2 PRO Themes Available
+                <span className="text-[10px] text-zinc-500 font-mono">
+                  2 Free • 2 Pro
                 </span>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 gap-2">
               {THEMES.map((t) => {
                 const isSelected = theme === t.id;
                 return (
@@ -435,20 +395,20 @@ export default function Home() {
                     key={t.id}
                     type="button"
                     onClick={() => handleThemeChange(t.id)}
-                    className={`relative p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col gap-2 group cursor-pointer ${
+                    className={`relative p-3 rounded-lg border text-left transition-colors duration-150 flex flex-col gap-1.5 cursor-pointer ${
                       isSelected
-                        ? "bg-slate-800/90 border-blue-500 ring-2 ring-blue-500/30 shadow-lg"
-                        : "bg-slate-950/60 border-slate-800 hover:bg-slate-800/40 hover:border-slate-700 text-slate-400"
+                        ? "bg-zinc-800/90 border-zinc-400 text-zinc-100"
+                        : "bg-zinc-950/60 border-[#27272a] hover:bg-zinc-800/40 hover:border-zinc-700 text-zinc-400"
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span
-                          className={`w-3.5 h-3.5 rounded-full border shadow-sm transition-transform group-hover:scale-110 ${t.previewClass}`}
+                          className={`w-3 h-3 rounded-full border border-zinc-700 ${t.previewClass}`}
                         />
                         <span
-                          className={`text-xs font-bold tracking-tight ${
-                            isSelected ? "text-white" : "text-slate-300"
+                          className={`text-xs font-semibold ${
+                            isSelected ? "text-white" : "text-zinc-300"
                           }`}
                         >
                           {t.name}
@@ -456,18 +416,12 @@ export default function Home() {
                       </div>
 
                       {t.isPro && (
-                        <span
-                          className={`text-[10px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-tight ${
-                            isProVerified
-                              ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                              : "bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                          }`}
-                        >
+                        <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold uppercase bg-zinc-800 text-zinc-300 border border-zinc-700">
                           PRO
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] text-slate-400 line-clamp-1 leading-snug">
+                    <span className="text-[10px] text-zinc-500 line-clamp-1">
                       {t.desc}
                     </span>
                   </button>
@@ -475,34 +429,34 @@ export default function Home() {
               })}
             </div>
 
-            {/* Seamless Non-Intrusive Paywall Card for Pro Themes */}
+            {/* Mono Minimalist Unlock PRO Banner */}
             {isDemoMode && (
-              <div className="mt-4 p-4 rounded-xl bg-gradient-to-br from-purple-950/50 via-slate-900 to-slate-950 border border-purple-500/40 shadow-xl flex flex-col gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="mt-3 p-3.5 rounded-lg bg-zinc-900/60 border border-[#27272a] flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 uppercase">
-                    ✨ LIFETIME PASS
+                  <span className="text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700 uppercase">
+                    PRO THEME
                   </span>
-                  <span className="text-xs font-bold text-white font-mono">
-                    $29 <span className="line-through text-slate-500 font-normal">$59</span>
+                  <span className="text-xs font-mono font-bold text-zinc-200">
+                    $29 <span className="line-through text-zinc-600 font-normal">$59</span>
                   </span>
                 </div>
 
-                <div>
-                  <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
-                    Unlock {theme.toUpperCase()} for Commercial Use
-                  </h4>
-                  <ul className="mt-2 space-y-1 text-[11px] text-slate-300">
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-zinc-200">
+                    Unlock {theme.toUpperCase()} for production use:
+                  </p>
+                  <ul className="text-[11px] text-zinc-400 space-y-1 pt-0.5">
                     <li className="flex items-center gap-1.5">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span>Permanently remove all demo watermarks</span>
+                      <span className="text-zinc-300">✓</span>
+                      <span>Remove demo watermarks permanently</span>
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span>Access to Gradient, Terminal &amp; future PRO styles</span>
+                      <span className="text-zinc-300">✓</span>
+                      <span>Full access to Gradient &amp; Terminal themes</span>
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <span className="text-emerald-400 font-bold">✓</span>
-                      <span>Unlimited production Edge API requests</span>
+                      <span className="text-zinc-300">✓</span>
+                      <span>Unlimited Edge API requests worldwide</span>
                     </li>
                   </ul>
                 </div>
@@ -511,29 +465,29 @@ export default function Home() {
                   href={CHECKOUT_URL}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 hover:from-purple-500 hover:via-indigo-500 hover:to-pink-500 text-white font-bold text-xs text-center shadow-lg shadow-purple-600/30 transition-all hover:shadow-purple-600/50 active:scale-[0.98] flex items-center justify-center gap-1.5 group"
+                  className="w-full py-2 px-3 rounded-lg bg-white hover:bg-[#e4e4e7] text-black font-semibold text-xs text-center transition-colors duration-150 flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]"
                 >
                   <span>Get Lifetime Pass ($29)</span>
-                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                  <span>→</span>
                 </a>
               </div>
             )}
           </div>
 
-          {/* License Key Field with Real-Time Validation Feedback */}
-          <div className="space-y-2 pt-2 border-t border-slate-800/80">
+          {/* License Key Field */}
+          <div className="space-y-1.5 pt-2 border-t border-[#27272a]">
             <div className="flex items-center justify-between">
               <label
                 htmlFor="key-input"
-                className="block text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5"
+                className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider font-mono"
               >
-                <span>🔑 LICENSE KEY</span>
+                LICENSE KEY
               </label>
 
               {licenseStatus === "verifying" && (
-                <span className="text-[11px] text-blue-400 font-medium flex items-center gap-1">
+                <span className="text-[10px] text-zinc-400 font-mono flex items-center gap-1">
                   <svg
-                    className="animate-spin h-3 w-3 text-blue-400"
+                    className="animate-spin h-3 w-3 text-zinc-400"
                     viewBox="0 0 24 24"
                     fill="none"
                   >
@@ -551,21 +505,21 @@ export default function Home() {
                       d="M4 12a8 8 0 018-8v8H4z"
                     />
                   </svg>
-                  Verifying...
+                  Checking...
                 </span>
               )}
               {licenseStatus === "valid" && (
-                <span className="text-[11px] text-emerald-400 font-bold flex items-center gap-1">
+                <span className="text-[10px] text-emerald-400 font-mono font-medium">
                   ✓ Verified Pro
                 </span>
               )}
               {licenseStatus === "invalid" && (
-                <span className="text-[11px] text-rose-400 font-bold flex items-center gap-1">
+                <span className="text-[10px] text-rose-400 font-mono font-medium">
                   ✕ Invalid Key
                 </span>
               )}
               {licenseStatus === "idle" && (
-                <span className="text-[11px] text-slate-500 font-medium">
+                <span className="text-[10px] text-zinc-600 font-mono">
                   Optional
                 </span>
               )}
@@ -578,14 +532,12 @@ export default function Home() {
                 value={licenseKey}
                 onChange={(e) => setLicenseKey(e.target.value)}
                 placeholder="Paste Lemon Squeezy license key..."
-                className={`w-full px-4 py-2.5 bg-slate-950 border rounded-xl text-slate-100 placeholder-slate-600 text-xs md:text-sm font-mono transition-all duration-200 focus:outline-none ${
+                className={`w-full px-3.5 py-2 bg-[#09090b] border rounded-lg text-zinc-100 placeholder-zinc-600 text-xs font-mono transition-colors focus:outline-none ${
                   licenseStatus === "valid"
-                    ? "border-emerald-500/80 ring-2 ring-emerald-500/20 bg-emerald-950/10 text-emerald-200"
+                    ? "border-emerald-500/70 bg-emerald-950/10 text-emerald-200"
                     : licenseStatus === "invalid"
-                    ? "border-rose-500/80 ring-2 ring-rose-500/20 bg-rose-950/10 text-rose-200"
-                    : licenseStatus === "verifying"
-                    ? "border-blue-500/80 ring-2 ring-blue-500/20 bg-slate-950"
-                    : "border-slate-800 focus:border-purple-500/80 focus:ring-2 focus:ring-purple-500/20"
+                    ? "border-rose-500/70 bg-rose-950/10 text-rose-200"
+                    : "border-[#27272a] focus:border-zinc-500"
                 }`}
               />
 
@@ -593,7 +545,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setLicenseKey("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs px-1 py-0.5 rounded cursor-pointer"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 text-xs p-1 cursor-pointer"
                   title="Clear key"
                 >
                   ✕
@@ -601,25 +553,24 @@ export default function Home() {
               )}
             </div>
 
-            {/* Helper status text */}
             {licenseStatus === "valid" ? (
-              <p className="text-[11px] text-emerald-400 px-1 font-medium flex items-center gap-1">
-                <span>✨ PRO Active. Watermarks removed from all exported cards.</span>
+              <p className="text-[11px] text-emerald-400 font-mono">
+                ✓ PRO Active. Watermarks removed from exported cards.
               </p>
             ) : licenseStatus === "invalid" ? (
-              <p className="text-[11px] text-rose-400 px-1 font-medium flex items-center justify-between">
-                <span>✕ Invalid key. Please check your purchase receipt.</span>
+              <p className="text-[11px] text-rose-400 font-mono flex items-center justify-between">
+                <span>✕ Invalid key.</span>
                 <a
                   href={CHECKOUT_URL}
                   target="_blank"
                   rel="noreferrer"
-                  className="underline hover:text-rose-300 font-semibold"
+                  className="underline hover:text-rose-300 font-sans font-medium"
                 >
-                  Buy License ($29) →
+                  Buy Lifetime Pass ($29) →
                 </a>
               </p>
             ) : (
-              <p className="text-[11px] text-slate-500 px-1 leading-normal">
+              <p className="text-[11px] text-zinc-500">
                 Enter your license key to remove watermarks and unlock commercial exports.
               </p>
             )}
@@ -630,11 +581,11 @@ export default function Home() {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="tag-input"
-                className="block text-xs font-bold text-slate-300 uppercase tracking-wider"
+                className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider font-mono"
               >
-                TAG / BADGE
+                TAG / CATEGORY
               </label>
-              <span className="text-[10px] text-slate-500 font-mono">
+              <span className="text-[10px] text-zinc-600 font-mono">
                 {tag.length}/30
               </span>
             </div>
@@ -645,7 +596,7 @@ export default function Home() {
               value={tag}
               onChange={(e) => setTag(e.target.value)}
               placeholder="e.g. TUTORIAL, RELEASE, NEXT.JS"
-              className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-600 text-xs md:text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all font-mono"
+              className="w-full px-3.5 py-2 bg-[#09090b] border border-[#27272a] rounded-lg text-zinc-100 placeholder-zinc-600 text-xs focus:outline-none focus:border-zinc-500 transition-colors font-mono"
             />
           </div>
 
@@ -654,11 +605,11 @@ export default function Home() {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="title-input"
-                className="block text-xs font-bold text-slate-300 uppercase tracking-wider"
+                className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider font-mono"
               >
                 TITLE
               </label>
-              <span className="text-[10px] text-slate-500 font-mono">
+              <span className="text-[10px] text-zinc-600 font-mono">
                 {title.length}/100
               </span>
             </div>
@@ -668,17 +619,17 @@ export default function Home() {
               maxLength={100}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter your Open Graph card title..."
-              className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-600 text-xs md:text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none leading-relaxed"
+              placeholder="Enter your card headline..."
+              className="w-full px-3.5 py-2.5 bg-[#09090b] border border-[#27272a] rounded-lg text-zinc-100 placeholder-zinc-600 text-xs sm:text-sm focus:outline-none focus:border-zinc-500 transition-colors resize-none leading-relaxed"
             />
           </div>
 
           {/* Presets */}
-          <div className="space-y-2 pt-2 border-t border-slate-800/80">
-            <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              QUICK PRESETS
+          <div className="space-y-2 pt-2 border-t border-[#27272a]">
+            <label className="block text-[11px] font-semibold text-zinc-500 uppercase tracking-wider font-mono">
+              PRESETS
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {presets.map((preset, idx) => (
                 <button
                   key={idx}
@@ -688,11 +639,11 @@ export default function Home() {
                     setTag(preset.tag);
                     setTheme(preset.theme);
                   }}
-                  className="text-xs px-3 py-1.5 rounded-lg bg-slate-950/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white transition-all duration-150 flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  className="text-[11px] px-2.5 py-1 rounded bg-zinc-950 border border-[#27272a] hover:bg-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-white transition-colors duration-150 flex items-center gap-1.5 cursor-pointer font-mono"
                 >
-                  <span className="font-semibold">{preset.tag}</span>
-                  <span className="text-[10px] text-slate-500 uppercase font-mono">
-                    • {preset.theme}
+                  <span>{preset.tag}</span>
+                  <span className="text-zinc-600 uppercase">
+                    ({preset.theme})
                   </span>
                 </button>
               ))}
@@ -700,22 +651,22 @@ export default function Home() {
           </div>
 
           {/* Direct Endpoint URL Box */}
-          <div className="pt-4 border-t border-slate-800/80 space-y-2">
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span className="font-semibold text-slate-300">Direct Image Endpoint</span>
+          <div className="pt-3 border-t border-[#27272a] space-y-1.5">
+            <div className="flex items-center justify-between text-xs text-zinc-400">
+              <span className="font-mono text-[11px] text-zinc-400">Direct Image Endpoint</span>
               <button
                 type="button"
                 onClick={handleCopyUrl}
-                className="text-blue-400 hover:text-blue-300 font-semibold transition-colors cursor-pointer flex items-center gap-1"
+                className="text-[11px] text-zinc-300 hover:text-white font-mono transition-colors cursor-pointer"
               >
                 {urlCopied ? (
-                  <span className="text-emerald-400">✓ URL Copied!</span>
+                  <span className="text-emerald-400">✓ Copied</span>
                 ) : (
                   <span>Copy URL</span>
                 )}
               </button>
             </div>
-            <div className="p-3 bg-slate-950/90 border border-slate-800 rounded-xl font-mono text-[11px] text-slate-400 truncate select-all">
+            <div className="p-2.5 bg-[#09090b] border border-[#27272a] rounded-lg font-mono text-[11px] text-zinc-400 truncate select-all">
               {fullOgUrl}
             </div>
           </div>
@@ -724,17 +675,15 @@ export default function Home() {
         {/* Right Side: Real-time Preview & Export Panel (7 cols) */}
         <div className="lg:col-span-7 flex flex-col gap-6 lg:sticky lg:top-8">
           {/* Main Preview Container with macOS Window Frame */}
-          <div
-            className={`bg-slate-900/90 border border-slate-800/80 backdrop-blur-2xl rounded-2xl p-5 md:p-6 transition-all duration-300 flex flex-col gap-4 ${activeThemeConfig.glowClass}`}
-          >
+          <div className="bg-[#121215] border border-[#27272a] rounded-xl p-5 sm:p-6 flex flex-col gap-4">
             {/* macOS Window Title Bar */}
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+            <div className="flex items-center justify-between border-b border-[#27272a] pb-3">
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-[#ff5f56] inline-block shadow-sm" />
-                <span className="w-3 h-3 rounded-full bg-[#ffbd2e] inline-block shadow-sm" />
-                <span className="w-3 h-3 rounded-full bg-[#27c93f] inline-block shadow-sm" />
-                <span className="ml-2 font-mono text-[11px] text-slate-400 flex items-center gap-2">
-                  <span className="font-semibold text-slate-200">tinyog-preview.png</span>
+                <span className="w-3 h-3 rounded-full bg-[#ff5f56] inline-block" />
+                <span className="w-3 h-3 rounded-full bg-[#ffbd2e] inline-block" />
+                <span className="w-3 h-3 rounded-full bg-[#27c93f] inline-block" />
+                <span className="ml-2 font-mono text-[11px] text-zinc-400 flex items-center gap-2">
+                  <span className="text-zinc-200">tinyog-preview.png</span>
                   <span>•</span>
                   <span>1200 × 630</span>
                 </span>
@@ -743,9 +692,9 @@ export default function Home() {
               {/* Status / Live Indicator */}
               <div className="flex items-center gap-2">
                 {isImageLoading ? (
-                  <span className="text-[11px] text-blue-400 flex items-center gap-1.5 font-medium animate-pulse">
+                  <span className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-mono">
                     <svg
-                      className="animate-spin h-3.5 w-3.5 text-blue-400"
+                      className="animate-spin h-3 w-3 text-zinc-400"
                       viewBox="0 0 24 24"
                       fill="none"
                     >
@@ -763,16 +712,15 @@ export default function Home() {
                         d="M4 12a8 8 0 018-8v8H4z"
                       />
                     </svg>
-                    Rendering Edge Card...
+                    Rendering...
                   </span>
                 ) : isDemoMode ? (
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 font-bold uppercase tracking-wider flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-zinc-300 font-mono uppercase tracking-wider">
                     PRO Demo Mode
                   </span>
                 ) : (
-                  <span className="text-[11px] text-emerald-400 flex items-center gap-1.5 font-medium">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-mono">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                     Ready
                   </span>
                 )}
@@ -781,74 +729,60 @@ export default function Home() {
                   href={ogPath}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-all flex items-center gap-1 font-medium cursor-pointer"
-                  title="Open high-resolution PNG in new tab"
+                  className="text-xs px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors border border-zinc-700/80 font-mono"
+                  title="Open raw image in new tab"
                 >
-                  <span>Raw Image</span>
-                  <svg
-                    className="w-3 h-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
+                  Raw Image
                 </a>
               </div>
             </div>
 
             {/* Exact 1200:630 Aspect Ratio Frame with Smooth Crossfade */}
-            <div className="relative w-full aspect-[1200/630] rounded-xl overflow-hidden bg-slate-950 border border-slate-800/90 shadow-2xl flex items-center justify-center group">
-              {/* Active Image */}
+            <div className="relative w-full aspect-[1200/630] rounded-lg overflow-hidden bg-[#09090b] border border-[#27272a] flex items-center justify-center">
               {displayedImgUrl ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
                   src={displayedImgUrl}
                   alt={`TinyOG Preview for ${effectiveTitle}`}
-                  className={`w-full h-full object-cover transition-opacity duration-200 ${
+                  className={`w-full h-full object-cover transition-opacity duration-150 ${
                     isImageLoading ? "opacity-75" : "opacity-100"
                   }`}
                 />
               ) : (
-                <div className="flex items-center gap-2 text-slate-500 text-xs">
-                  <span>Generating social card...</span>
+                <div className="flex items-center gap-2 text-zinc-500 text-xs font-mono">
+                  <span>Rendering card...</span>
                 </div>
               )}
 
-              {/* Subdued Top Progress Bar while rendering */}
+              {/* Subdued Top Progress Bar */}
               {isImageLoading && (
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 animate-pulse" />
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-zinc-300 animate-pulse" />
               )}
 
               {/* Floating Pro Preview Badge */}
               {isDemoMode && (
-                <div className="absolute top-3 right-3 px-3 py-1.5 rounded-full bg-slate-950/85 backdrop-blur-xl border border-purple-500/50 text-purple-200 text-xs font-bold flex items-center gap-1.5 shadow-2xl pointer-events-none">
-                  <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-                  <span>✨ PRO Demo Preview</span>
+                <div className="absolute top-3 right-3 px-2.5 py-1 rounded bg-zinc-950/90 backdrop-blur-md border border-zinc-700 text-zinc-300 text-[10px] font-mono uppercase tracking-wider flex items-center gap-1.5 shadow-md pointer-events-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
+                  <span>PRO Demo</span>
                 </div>
               )}
             </div>
 
             {/* Dimensions and specs info */}
-            <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-              <span>Standard Open Graph 1200×630px • High-DPI Edge Rendered</span>
-              <span className="font-mono text-slate-400 uppercase font-semibold">
+            <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono pt-1">
+              <span>1200 × 630 px • Edge Rendered</span>
+              <span className="uppercase text-zinc-400">
                 Theme: {theme}
               </span>
             </div>
           </div>
 
           {/* HTML Meta Tag Export Card */}
-          <div className="bg-slate-900/90 border border-slate-800/80 backdrop-blur-2xl rounded-2xl p-5 md:p-6 shadow-2xl flex flex-col gap-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
+          <div className="bg-[#121215] border border-[#27272a] rounded-xl p-5 sm:p-6 flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#27272a] pb-3">
               <div className="flex items-center gap-2">
                 <svg
-                  className="w-5 h-5 text-blue-400"
+                  className="w-4 h-4 text-zinc-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -860,7 +794,7 @@ export default function Home() {
                     d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
                   />
                 </svg>
-                <h3 className="text-sm font-bold text-slate-200">
+                <h3 className="text-xs font-bold text-zinc-300 uppercase tracking-wider font-mono">
                   HTML Meta Tag &amp; Export
                 </h3>
               </div>
@@ -871,16 +805,16 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={handleCopyHtml}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-lg ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors duration-150 flex items-center gap-1.5 cursor-pointer ${
                     htmlCopied
-                      ? "bg-emerald-600 text-white shadow-emerald-600/30"
-                      : "bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/25"
+                      ? "bg-emerald-600 text-white"
+                      : "bg-white hover:bg-[#e4e4e7] text-black"
                   }`}
                 >
                   {htmlCopied ? (
                     <>
                       <svg
-                        className="w-4 h-4 text-white"
+                        className="w-3.5 h-3.5 text-white"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -892,12 +826,12 @@ export default function Home() {
                           d="M5 13l4 4L19 7"
                         />
                       </svg>
-                      <span>Copied to Clipboard!</span>
+                      <span>Copied!</span>
                     </>
                   ) : (
                     <>
                       <svg
-                        className="w-4 h-4 text-white"
+                        className="w-3.5 h-3.5 text-black"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -919,16 +853,14 @@ export default function Home() {
                   type="button"
                   onClick={handleDownload}
                   disabled={isDownloading}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center gap-1.5 border active:scale-95 cursor-pointer disabled:opacity-50 ${
-                    downloadSuccess
-                      ? "bg-emerald-950/60 border-emerald-500/50 text-emerald-300"
-                      : "bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-200 hover:text-white"
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors duration-150 flex items-center gap-1.5 border border-[#27272a] bg-zinc-900 hover:bg-zinc-800 text-zinc-200 cursor-pointer disabled:opacity-50 ${
+                    downloadSuccess ? "border-emerald-500/50 text-emerald-300" : ""
                   }`}
                 >
                   {isDownloading ? (
                     <>
                       <svg
-                        className="animate-spin h-4 w-4 text-slate-300"
+                        className="animate-spin h-3.5 w-3.5 text-zinc-300"
                         viewBox="0 0 24 24"
                         fill="none"
                       >
@@ -946,12 +878,12 @@ export default function Home() {
                           d="M4 12a8 8 0 018-8v8H4z"
                         />
                       </svg>
-                      <span>Saving PNG...</span>
+                      <span>Saving...</span>
                     </>
                   ) : downloadSuccess ? (
                     <>
                       <svg
-                        className="w-4 h-4 text-emerald-400"
+                        className="w-3.5 h-3.5 text-emerald-400"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -963,12 +895,12 @@ export default function Home() {
                           d="M5 13l4 4L19 7"
                         />
                       </svg>
-                      <span>Downloaded!</span>
+                      <span>Downloaded</span>
                     </>
                   ) : (
                     <>
                       <svg
-                        className="w-4 h-4 text-emerald-400"
+                        className="w-3.5 h-3.5 text-zinc-400"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -988,27 +920,27 @@ export default function Home() {
             </div>
 
             {/* Code Snippet Box */}
-            <div className="relative group">
-              <pre className="p-4 bg-slate-950/90 border border-slate-800 rounded-xl font-mono text-xs text-blue-300 select-all overflow-x-auto whitespace-pre-wrap break-all leading-relaxed shadow-inner">
+            <div className="relative">
+              <pre className="p-3.5 bg-[#09090b] border border-[#27272a] rounded-lg font-mono text-xs text-zinc-300 select-all overflow-x-auto whitespace-pre-wrap break-all leading-relaxed">
                 {metaTagSnippet}
               </pre>
             </div>
 
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              💡 Paste this tag into your website&apos;s <code className="text-slate-400 font-mono">&lt;head&gt;</code> section to render rich cards across X (Twitter), LinkedIn, Discord, and Slack.
+            <p className="text-[11px] text-zinc-500 leading-relaxed font-mono">
+              Paste this tag into your <code className="text-zinc-400">&lt;head&gt;</code> section for instant rich previews on X, Discord, and LinkedIn.
             </p>
 
             {/* Pro Preview Notice */}
             {isDemoMode && (
-              <div className="p-3.5 bg-purple-950/25 border border-purple-500/30 rounded-xl text-xs text-purple-300 flex items-start gap-2.5">
-                <span className="text-base shrink-0">ℹ️</span>
-                <div className="leading-relaxed">
-                  Currently rendering in <strong>PRO Demo Mode</strong> (includes demo watermark). To remove watermarks for commercial production websites, activate your{" "}
+              <div className="p-3 bg-zinc-900/40 border border-[#27272a] rounded-lg text-xs text-zinc-400 flex items-start gap-2">
+                <span className="text-zinc-300 font-mono">ℹ</span>
+                <div className="leading-relaxed text-[11px]">
+                  Rendering in <strong>PRO Demo Mode</strong> (includes demo watermark). To remove watermarks for commercial use, activate your{" "}
                   <a
                     href={CHECKOUT_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-white underline hover:text-purple-200 font-bold"
+                    className="text-white underline hover:text-zinc-300 font-semibold"
                   >
                     Lifetime Pass ($29) →
                   </a>
@@ -1020,29 +952,27 @@ export default function Home() {
       </div>
 
       {/* Global Footer with Lemon Squeezy Compliance Links */}
-      <footer className="w-full max-w-6xl mt-20 pt-8 border-t border-slate-800/80 flex flex-col gap-5 text-xs text-slate-500">
+      <footer className="w-full max-w-6xl mt-20 pt-8 border-t border-[#27272a] flex flex-col gap-4 text-xs text-zinc-500">
         {/* Top footer row: Service & Guarantee specs */}
-        <div className="flex flex-wrap items-center justify-between gap-3 text-slate-400 text-xs">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-zinc-400 text-xs font-mono">
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="font-bold text-slate-200">TinyOG</span>
+            <span className="font-bold text-zinc-200">TinyOG</span>
             <span>•</span>
             <span>Lifetime Pass</span>
             <span>•</span>
-            <span>One-time payment $29</span>
+            <span>$29 One-time</span>
             <span>•</span>
-            <span className="text-emerald-400 font-semibold flex items-center gap-1">
-              ✓ 14-day money-back guarantee
-            </span>
+            <span className="text-zinc-300">14-day refund guarantee</span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 font-sans">
             {!isProVerified && (
               <>
                 <a
                   href={CHECKOUT_URL}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
+                  className="text-zinc-300 hover:text-white font-medium transition-colors"
                 >
                   Buy Lifetime Pass ($29) →
                 </a>
@@ -1051,7 +981,7 @@ export default function Home() {
             )}
             <a
               href="mailto:support@tinyog.cloud"
-              className="hover:text-slate-300 transition-colors"
+              className="hover:text-zinc-300 transition-colors"
             >
               support@tinyog.cloud
             </a>
@@ -1059,27 +989,27 @@ export default function Home() {
         </div>
 
         {/* Bottom footer row: Legal links & Copyright */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-850 text-[11px] text-slate-500">
-          <p>© 2026 TinyOG (tinyog.cloud). All rights reserved. • Built for indie hackers and bloggers.</p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-zinc-900 text-[11px] text-zinc-600 font-mono">
+          <p>© 2026 TinyOG (tinyog.cloud). All rights reserved.</p>
 
-          <div className="flex items-center gap-4 text-slate-400">
+          <div className="flex items-center gap-4 text-zinc-500">
             <Link
               href="/terms"
-              className="hover:text-white transition-colors underline-offset-2 hover:underline"
+              className="hover:text-zinc-300 transition-colors"
             >
               Terms of Service
             </Link>
             <span>•</span>
             <Link
               href="/privacy"
-              className="hover:text-white transition-colors underline-offset-2 hover:underline"
+              className="hover:text-zinc-300 transition-colors"
             >
               Privacy Policy
             </Link>
             <span>•</span>
             <Link
               href="/refund"
-              className="hover:text-white transition-colors underline-offset-2 hover:underline"
+              className="hover:text-zinc-300 transition-colors"
             >
               Refund Policy
             </Link>
@@ -1089,21 +1019,9 @@ export default function Home() {
 
       {/* Floating Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-900/95 border border-purple-500/40 text-slate-100 shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-3 duration-200">
-          <svg
-            className="w-4 h-4 text-purple-400 shrink-0"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13 10V3L4 14h7v7l9-11h-7z"
-            />
-          </svg>
-          <span className="text-xs font-semibold">{toastMessage}</span>
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-700 text-zinc-200 text-xs font-mono shadow-xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-150">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <span>{toastMessage}</span>
         </div>
       )}
     </main>
