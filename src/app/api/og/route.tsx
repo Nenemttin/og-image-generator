@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
     const rawTag = searchParams.get('tag') || 'Next.js';
     const rawDescription = searchParams.get('description') || '';
     const rawTheme = searchParams.get('theme') || 'dark';
-    const rawKey = searchParams.get('key');
+    const rawKey = searchParams.get('key') || searchParams.get('licenseKey');
 
     // title: 최대 100자, description: 최대 200자, tag: 최대 30자
     const title = rawTitle.slice(0, 100).trim() || 'Default Title';

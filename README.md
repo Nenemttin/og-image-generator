@@ -1,114 +1,92 @@
 <div align="center">
 
-# TinyOG (tinyog.cloud)
+# TinyOG — Lightning-fast Dynamic Social Cards with One URL
 
-**Lightning-fast Dynamic Social Card & Open Graph Generator powered by Next.js Edge Runtime.**
+**Zero-config Open Graph card generator for developers, creators, and modern engineering teams.**
 
-[![Website](https://img.shields.io/badge/Production-tinyog.cloud-6366f1?style=for-the-badge&logo=google-chrome&logoColor=white)](https://tinyog.cloud)
-[![Next.js](https://img.shields.io/badge/Next.js_15+-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Website](https://img.shields.io/badge/Production-tinyog.cloud-000000?style=for-the-badge&logo=googlechrome&logoColor=white)](https://tinyog.cloud)
+[![Next.js](https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org)
 [![Edge Runtime](https://img.shields.io/badge/Edge_Runtime-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
-[![License](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Live-success?style=for-the-badge)](https://tinyog.cloud)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![License](https://img.shields.io/badge/License-Proprietary_%2F_Lifetime_Pass-8b5cf6?style=for-the-badge)](https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e)
+[![Status](https://img.shields.io/badge/Status-Live-10B981?style=for-the-badge)](https://tinyog.cloud)
 
 <br />
 
-[Explore Live Generator](https://tinyog.cloud) • [Get Lifetime Pass ($29)](https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e) • [API Documentation](#quick-start--usage) • [Legal & Policies](#legal--compliance)
+[**Launch Studio**](https://tinyog.cloud) • [**Get Lifetime Pass ($29)**](https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e) • [**API Documentation**](#-quick-integration) • [**Themes & Pro**](#-available-themes--pro-features) • [**Legal & Policies**](#-legal--compliance)
 
 </div>
 
 ---
 
-## ⚡ Overview
+## ⚡ Overview & Core Value
 
-Stop manually designing, exporting, and uploading static `1200x630` images for every blog post, technical article, or product update.
+Stop opening design software, exporting heavy PNGs, and manually uploading static `1200x630` images for every blog post, tutorial, product changelog, or docs page.
 
-**TinyOG** is an ultra-lightweight, zero-config Open Graph (OG) image generation service. It dynamically renders pixel-perfect, high-DPI social preview cards on-the-fly via a single URL endpoint. Simply plug the generated URL directly into your HTML `<meta>` tags, and your Twitter Cards, Facebook previews, LinkedIn snippets, and Slack unfurls will always stay updated in real time.
+**TinyOG** is an ultra-lightweight, zero-config Open Graph card engine. It synthesizes pixel-perfect, high-DPI social cards on-the-fly via a single URL endpoint. Plug the generated endpoint directly into your HTML `<meta>` tags, and your Twitter Cards, Facebook previews, LinkedIn cards, and Slack/Discord unfurls will always reflect your latest content in real time.
 
 ### Why TinyOG?
-- **Zero Configuration**: No Figma templates, headless Chrome instances, or complex Puppeteer microservices required.
-- **Edge-Rendered Sub-Millisecond Speed**: Powered by Next.js Edge Runtime and `@vercel/og` (Satori), delivering lightning-fast cold starts and distributed worldwide edge caching.
-- **Framework Agnostic**: Works seamlessly with Next.js, Astro, Ghost, Hugo, Gatsby, Nuxt, SvelteKit, WordPress, or plain HTML.
-- **Developer-Tailored Aesthetics**: Carefully designed themes optimized for technical writers, open-source maintainers, and indie hackers.
+- **Zero Configuration**: No Figma templates, headless Chrome instances, or fragile Puppeteer setups required.
+- **Edge-Cached Sub-50ms Speed**: Powered by Next.js Edge Runtime and `@vercel/og` (Satori), with global CDN distribution and aggressive `Cache-Control` optimization.
+- **Interactive Studio Playground**: Real-time preview with macOS window framing, instant live debounce rendering, character counter guards, and 1-click HTML meta tag export.
+- **Framework Agnostic**: Drops seamlessly into Next.js, Astro, Ghost, Hugo, Gatsby, Nuxt, SvelteKit, WordPress, or plain HTML.
+- **Developer-First Aesthetics**: High-contrast, typography-focused designs crafted for technical blogs, developer docs, and SaaS products.
 
 ---
 
-## ✨ Key Features
+## 🚀 Quick Integration
 
-| Feature | Description |
-|---|---|
-| ⚡ **Edge-Powered Performance** | Built on top of the Vercel Edge Runtime. Cached globally across CDN nodes for sub-50ms response times. |
-| 🎨 **4 Curated Visual Themes** | Switch between **Dark**, **Minimal**, **Gradient (Pro)**, and **Terminal (Pro)** themes instantly using a simple query parameter. |
-| 🔑 **Frictionless Licensing** | Direct integration with Lemon Squeezy API for automated, real-time license key validation and edge-cached authentication. |
-| 🛡️ **Zero Data Persistence** | Completely stateless architecture. We do not store your titles, query strings, or personal visitor data—ensuring strict GDPR and CCPA compliance. |
-| 🔤 **Optimized Typography** | Pre-bundled with high-quality Pretendard typography for crisp Korean and English character rendering across all devices. |
+Generating dynamic cards is as simple as making an HTTP request to `https://tinyog.cloud/api/og`.
 
----
+### 1. HTML `<meta>` Tag (Production Ready)
 
-## 🎨 Themes
-
-| Theme Key | Name | Access | Visual Style |
-|---|---|---|---|
-| `dark` | **Navy Dark** | Free | Classic deep navy background with subtle matrix dots and border glow. |
-| `minimal` | **Clean Minimal** | Free | High-contrast editorial white background with sharp typographic hierarchy. |
-| `gradient` | **Modern Mesh** | **PRO** | Vibrant indigo-purple gradient mesh with polished glassmorphism badge. |
-| `terminal` | **Dev Terminal** | **PRO** | macOS-inspired code console with traffic light controls and Monospace typography. |
-
-> **PRO Features**: Activating a valid Lifetime Pass removes the `Generated by TinyOG` watermark and unlocks the `gradient` and `terminal` themes.
-
----
-
-## 🚀 Quick Start & Usage
-
-You can generate dynamic cards immediately by calling the `https://tinyog.cloud/api/og` endpoint.
-
-### 1. Direct Image Endpoint (Markdown / HTML)
-
-```markdown
-![Social Card](https://tinyog.cloud/api/og?title=Building+Modern+Microfrontends&tag=DEV&theme=dark)
-```
-
-### 2. Production HTML Meta Tag Integration
-
-Drop this snippet directly inside your site's `<head>` tag:
+Drop this single line into your `<head>` section:
 
 ```html
-<!-- Open Graph / Facebook / LinkedIn -->
+<meta property="og:image" content="https://tinyog.cloud/api/og?title=Your+Title&tag=TUTORIAL&theme=gradient" />
+```
+
+### 2. Comprehensive Social Preview Setup
+
+For complete support across Twitter/X, LinkedIn, Discord, and Slack:
+
+```html
+<!-- Open Graph / Facebook / LinkedIn / Discord -->
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Building Modern Microfrontends" />
-<meta property="og:description" content="A comprehensive architectural guide for scalable web apps." />
-<meta property="og:image" content="https://tinyog.cloud/api/og?title=Building+Modern+Microfrontends&tag=ARCHITECTURE&theme=terminal&key=YOUR_PRO_LICENSE_KEY" />
+<meta property="og:title" content="How to Build Modern Web Apps at the Edge" />
+<meta property="og:image" content="https://tinyog.cloud/api/og?title=How+to+Build+Modern+Web+Apps+at+the+Edge&tag=ARCHITECTURE&theme=terminal&key=YOUR_PRO_LICENSE_KEY" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 
-<!-- Twitter Card -->
+<!-- Twitter / X Card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Building Modern Microfrontends" />
-<meta name="twitter:image" content="https://tinyog.cloud/api/og?title=Building+Modern+Microfrontends&tag=ARCHITECTURE&theme=terminal&key=YOUR_PRO_LICENSE_KEY" />
+<meta name="twitter:title" content="How to Build Modern Web Apps at the Edge" />
+<meta name="twitter:image" content="https://tinyog.cloud/api/og?title=How+to+Build+Modern+Web+Apps+at+the+Edge&tag=ARCHITECTURE&theme=terminal&key=YOUR_PRO_LICENSE_KEY" />
 ```
 
-### 3. Next.js App Router Metadata Integration
+### 3. Next.js App Router Integration
 
 ```typescript
-// app/posts/[slug]/page.tsx
+// app/blog/[slug]/page.tsx
 import type { Metadata } from 'next';
 
 export async function generateMetadata({ params }): Promise<Metadata> {
   const ogUrl = new URL('https://tinyog.cloud/api/og');
-  ogUrl.searchParams.set('title', 'Your Dynamic Post Title');
-  ogUrl.searchParams.set('tag', 'ENGINEERING');
+  ogUrl.searchParams.set('title', 'Building High-Performance Web Apps');
+  ogUrl.searchParams.set('tag', 'NEXT.JS');
   ogUrl.searchParams.set('theme', 'gradient');
   ogUrl.searchParams.set('key', process.env.TINYOG_LICENSE_KEY || '');
 
   return {
-    title: 'Your Dynamic Post Title',
+    title: 'Building High-Performance Web Apps',
     openGraph: {
       images: [
         {
           url: ogUrl.toString(),
           width: 1200,
           height: 630,
+          alt: 'Building High-Performance Web Apps',
         },
       ],
     },
@@ -122,27 +100,62 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 
 | Parameter | Type | Required | Default | Description |
 |---|---|:---:|---|---|
-| `title` | `string` | Optional | `"Default Title"` | The main headline displayed on the card (Supports URL encoding and auto text-wrapping). |
-| `tag` | `string` | Optional | `"TAG"` | Top pill badge or category tag (e.g. `TECH`, `NEWS`, `GUIDE`). |
-| `theme` | `string` | Optional | `dark` | Visual design theme: `dark`, `minimal`, `gradient`, or `terminal`. |
-| `key` | `string` | Optional | `""` | Lemon Squeezy license key to remove the watermark and unlock Pro themes. |
+| `title` | `string` | Optional | `"Default Title"` | Card headline. Automatic line wrapping with defense clamp (up to 100 characters). |
+| `tag` | `string` | Optional | `"Next.js"` | Category / section badge displayed in the top pill (up to 30 characters). |
+| `theme` | `string` | Optional | `"dark"` | Visual design theme: `dark`, `minimal`, `gradient`, or `terminal`. |
+| `key` / `licenseKey` | `string` | Optional | `""` | Lemon Squeezy license key to remove the watermark and unlock commercial PRO themes. |
+
+---
+
+## 🎨 Available Themes & PRO Features
+
+TinyOG provides 4 curated visual themes engineered for technical readability:
+
+| Theme Key | Name | Access | Visual Style |
+|---|---|:---:|---|
+| `dark` | **Dark** | **Free** | Deep navy/zinc background with subtle matrix dots and border glow. |
+| `minimal` | **Minimal** | **Free** | High-contrast editorial white background with sharp typography. |
+| `gradient` | **Gradient** | **PRO** | Vibrant indigo-to-purple tech mesh gradient with frosted glass badge. |
+| `terminal` | **Terminal** | **PRO** | macOS developer console with traffic light controls and monospace syntax. |
+
+### 💎 Lifetime Pass Benefits ($29 One-Time)
+- **Permanent Watermark Removal**: Clean, unbranded cards for your blogs and commercial products.
+- **Full Access to PRO Themes**: Commercial rights to use `gradient` and `terminal` themes.
+- **Unlimited Worldwide Edge Calls**: Edge-cached CDN delivery across global PoPs.
+- **No Recurring Subscriptions**: Single one-time purchase with free lifetime updates.
+- **14-Day Money-Back Guarantee**: Full refund if you're not completely satisfied.
+
+👉 [**Get Your Lifetime Pass on Lemon Squeezy ($29) →**](https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e)
 
 ---
 
 ## 🛠️ Tech Stack & Architecture
 
-- **Core Framework**: [Next.js](https://nextjs.org/) 15+ (App Router, Edge Runtime)
-- **Image Generation Engine**: [`@vercel/og`](https://vercel.com/docs/functions/og-image-generation) powered by Satori & Resvg
+- **Framework**: [Next.js](https://nextjs.org/) 15+ (App Router, Edge Runtime)
+- **Image Generation**: [`@vercel/og`](https://vercel.com/docs/functions/og-image-generation) (powered by Satori & Resvg)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [Lucide Icons](https://lucide.dev/)
-- **License Validation**: [Lemon Squeezy API](https://docs.lemonsqueezy.com/api) with Next.js revalidation cache
-- **Typography**: Pretendard Variable Font (CDN edge fetched)
-- **Infrastructure & Hosting**: [Vercel](https://vercel.com) Edge Network (`tinyog.cloud`)
+- **Typography**: Pretendard Variable Font (edge-cached in-memory binary)
+- **Billing & Licensing**: [Lemon Squeezy](https://www.lemonsqueezy.com/) (Merchant of Record & License Engine)
+- **Edge CDN Hosting**: [Vercel](https://vercel.com/) Worldwide Edge Network (`tinyog.cloud`)
 
 ---
 
-## 💻 Local Development Setup
+## ⚖️ Legal & Compliance
 
-Clone the repository and install dependencies:
+TinyOG operates under transparent, user-first policies:
+
+- **Official Website**: [https://tinyog.cloud](https://tinyog.cloud)
+- **Terms of Service**: [https://tinyog.cloud/terms](https://tinyog.cloud/terms)
+- **Privacy Policy**: [https://tinyog.cloud/privacy](https://tinyog.cloud/privacy)
+- **Refund Policy**: [https://tinyog.cloud/refund](https://tinyog.cloud/refund) (14-Day Refund Guarantee)
+- **Merchant of Record**: Payments and billing are securely handled by [Lemon Squeezy](https://www.lemonsqueezy.com).
+- **Customer Support**: [support@tinyog.cloud](mailto:support@tinyog.cloud)
+
+---
+
+## 💻 Local Development
+
+To run the interactive studio playground locally:
 
 ```bash
 # Clone the repository
@@ -152,37 +165,23 @@ cd og-image-generator
 # Install dependencies
 npm install
 
-# Start development server with Turbopack
+# Run development server with Turbopack
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to access the interactive preview dashboard.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
 ### Environment Configuration (Optional)
 
-Create a `.env.local` file in the root directory:
+Create a `.env.local` file in the project root:
 
 ```env
-# Optional: Local Pro bypass key for development and automated testing
-PRO_LICENSE_KEY=your_local_test_key_here
+# Optional: Local bypass key for local development and test verification
+PRO_LICENSE_KEY=your_test_license_key_here
 ```
-
----
-
-## ⚖️ Legal & Compliance
-
-TinyOG operates under transparent, user-first legal and commerce policies:
-
-- **Official Website**: [https://tinyog.cloud](https://tinyog.cloud)
-- **Terms of Service**: [https://tinyog.cloud/terms](https://tinyog.cloud/terms)
-- **Privacy Policy**: [https://tinyog.cloud/privacy](https://tinyog.cloud/privacy)
-- **Refund Policy**: [https://tinyog.cloud/refund](https://tinyog.cloud/refund) (14-Day Money-Back Guarantee)
-- **Merchant of Record**: Payments and billing are securely handled by [Lemon Squeezy](https://www.lemonsqueezy.com), acting as the Merchant of Record.
-- **Support & Inquiries**: [support@tinyog.cloud](mailto:support@tinyog.cloud)
 
 ---
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE). Feel free to adapt and build upon this project for your personal and commercial workflows.
-
+The TinyOG web application and API service are provided under a commercial license with free tier usage. Commercial watermark removal and PRO themes are governed by the [TinyOG Lifetime Pass](https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e).
