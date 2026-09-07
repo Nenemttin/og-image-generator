@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react";
 
+const CHECKOUT_URL =
+  "https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e";
+
 type ThemeOption = {
   id: "dark" | "gradient" | "minimal" | "terminal";
   name: "Dark" | "Gradient" | "Minimal" | "Terminal";
@@ -86,10 +89,16 @@ export default function Home() {
     return () => clearTimeout(handler);
   }, [title, tag, licenseKey]);
 
-  // 테마 변경 시 즉시 로딩 표시
+  const hasKey = Boolean(debouncedKey.trim());
+
+  // 테마 변경 시 로딩 표시 및 PRO 테마 넛지
   const handleThemeChange = (newTheme: "dark" | "gradient" | "minimal" | "terminal") => {
     setIsLoading(true);
     setTheme(newTheme);
+
+    if (!hasKey && (newTheme === "gradient" || newTheme === "terminal")) {
+      showToast("🔒 이 테마는 PRO 전용입니다. 평생 이용권으로 해금해보세요!");
+    }
   };
 
   const keyParam = debouncedKey.trim()
@@ -109,7 +118,7 @@ export default function Home() {
     setToastMessage(message);
     setTimeout(() => {
       setToastMessage((prev) => (prev === message ? null : prev));
-    }, 2500);
+    }, 2800);
   };
 
   // HTML 메타 태그 복사
@@ -192,41 +201,79 @@ export default function Home() {
     },
   ];
 
-  const hasKey = Boolean(licenseKey.trim());
-
   return (
     <main className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-start p-6 md:p-12 relative overflow-hidden">
       {/* 배경 글로우 효과 */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none -z-10" />
 
-      {/* 상단 헤더 */}
-      <div className="w-full max-w-5xl mb-10 text-center md:text-left">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
-          <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-          Ultra-Fast OG Maker
-        </div>
+      {/* 상단 네비게이션 헤더 */}
+      <header className="w-full max-w-5xl mb-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800/80">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-2">
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+            Ultra-Fast OG Maker
+          </div>
 
-        {/* 로고 & 뱃지 */}
-        <div className="flex items-center justify-center md:justify-start gap-3">
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-            TinyOG
-          </h1>
-          <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-gradient-to-r from-blue-500/20 to-indigo-500/20 border border-blue-400/30 text-blue-300 font-bold tracking-wider shadow-sm uppercase">
-            BETA
-          </span>
-          {hasKey && (
-            <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-bold tracking-wider shadow-sm uppercase">
-              PRO
+          {/* 로고 & 뱃지 */}
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+              TinyOG
+            </h1>
+            <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-gradient-to-r from-blue-500/20 to-indigo-500/20 border border-blue-400/30 text-blue-300 font-bold tracking-wider shadow-sm uppercase">
+              BETA
             </span>
-          )}
+            {hasKey && (
+              <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-bold tracking-wider shadow-sm uppercase">
+                PRO ACTIVE
+              </span>
+            )}
+          </div>
         </div>
 
-        {/* 서브 카피 */}
-        <p className="mt-3 text-slate-300 text-base md:text-lg font-medium max-w-2xl">
-          TinyOG — 링크 하나로 끝나는 초경량 소셜 썸네일
+        {/* 상단 우측 PRO 구매 버튼 (Lemon Squeezy 결제 링크) */}
+        <div className="flex flex-col sm:items-end gap-1.5 w-full sm:w-auto">
+          <div className="flex items-center gap-2">
+            <span className="hidden sm:inline-flex text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold uppercase tracking-wider animate-pulse">
+              ⚡ LTD 50% OFF
+            </span>
+            <a
+              href={CHECKOUT_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-600 hover:from-indigo-600 hover:via-purple-700 hover:to-pink-700 text-white font-bold text-xs md:text-sm shadow-xl shadow-purple-600/25 border border-purple-400/30 transition-all hover:shadow-purple-600/40 active:scale-95 flex items-center justify-center gap-2 group"
+            >
+              <svg
+                className="w-4 h-4 text-purple-200 group-hover:scale-110 transition-transform"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+              <span>Get Lifetime Pass ($29)</span>
+              <span className="transition-transform group-hover:translate-x-0.5">
+                →
+              </span>
+            </a>
+          </div>
+          <span className="text-[11px] text-slate-400 text-left sm:text-right">
+            평생 무제한 워터마크 제거 &amp; PRO 테마 언락
+          </span>
+        </div>
+      </header>
+
+      {/* 메인 서브 카피 */}
+      <div className="w-full max-w-5xl mb-8">
+        <p className="text-slate-300 text-base md:text-xl font-semibold">
+          TinyOG — 링크 하나로 끝나는 초경량 동적 소셜 썸네일
         </p>
-        <p className="mt-1 text-slate-400 text-xs md:text-sm max-w-xl">
-          블로거와 개발자를 위한 Zero-config 동적 오픈그래프 카드 자동 생성기. 실시간 미리보기로 확인하고 즉시 내보내세요.
+        <p className="mt-1 text-slate-400 text-xs md:text-sm max-w-2xl">
+          블로거와 개발자를 위한 Zero-config 오픈그래프 카드 자동 생성기입니다. 실시간 미리보기로 확인하고 HTML 메타 태그 또는 이미지를 바로 내보내세요.
         </p>
       </div>
 
@@ -248,12 +295,12 @@ export default function Home() {
                   d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                 />
               </svg>
-              속성 & 테마 설정
+              속성 &amp; 테마 설정
             </h2>
             <span className="text-xs text-slate-500">실시간 연동 중</span>
           </div>
 
-          {/* 디자인 테마 선택 (라디오/그리드 카드 형태) */}
+          {/* 디자인 테마 선택 */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider">
@@ -313,10 +360,36 @@ export default function Home() {
                 );
               })}
             </div>
+
+            {/* Pro 테마 선택 시 넛지 배너 */}
+            {!hasKey && (theme === "gradient" || theme === "terminal") && (
+              <div className="mt-3 p-3.5 bg-gradient-to-r from-purple-950/40 via-indigo-950/40 to-slate-900 border border-purple-500/40 rounded-xl flex flex-col gap-2.5 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="flex items-start gap-2">
+                  <span className="text-base shrink-0">🔒</span>
+                  <div className="text-xs text-purple-200 leading-relaxed">
+                    <strong className="text-white font-semibold">
+                      선택하신 {theme.toUpperCase()} 테마는 PRO 전용입니다.
+                    </strong>
+                    <p className="text-purple-300/80 text-[11px] mt-0.5">
+                      워터마크 제거와 함께 평생 이용권을 구매해보세요.
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href={CHECKOUT_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-xs text-center shadow-md shadow-purple-600/30 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5"
+                >
+                  <span>평생 이용권 구매하기 ($29)</span>
+                  <span>→</span>
+                </a>
+              </div>
+            )}
           </div>
 
-          {/* 라이선스 키 입력 (선택 사항) */}
-          <div className="space-y-2 pt-1 border-t border-slate-800/80">
+          {/* 라이선스 키 입력 필드 */}
+          <div className="space-y-2 pt-2 border-t border-slate-800/80">
             <div className="flex items-center justify-between">
               <label
                 htmlFor="key-input"
@@ -338,13 +411,29 @@ export default function Home() {
               type="password"
               value={licenseKey}
               onChange={(e) => setLicenseKey(e.target.value)}
-              placeholder="PRO 라이선스 키를 입력하세요..."
-              className="w-full px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-mono"
+              placeholder="Lemon Squeezy 라이선스 키를 입력하세요..."
+              className="w-full px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all font-mono"
             />
+
+            {/* 키 미소유자 결제 링크 안내 */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] pt-1 px-1">
+              <span className="text-slate-400">Don&apos;t have a key yet?</span>
+              <a
+                href={CHECKOUT_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="text-purple-400 hover:text-purple-300 font-semibold transition-colors inline-flex items-center gap-1 group"
+              >
+                <span>Get your Lifetime Pass ($29)</span>
+                <span className="transition-transform group-hover:translate-x-0.5">
+                  →
+                </span>
+              </a>
+            </div>
 
             {/* 안내 문구 */}
             {!hasKey ? (
-              <div className="p-3 bg-blue-950/30 border border-blue-500/20 rounded-xl text-[11px] text-blue-300/90 leading-relaxed flex items-start gap-2">
+              <div className="mt-2 p-3 bg-blue-950/30 border border-blue-500/20 rounded-xl text-[11px] text-blue-300/90 leading-relaxed flex items-start gap-2">
                 <span className="text-base shrink-0">💡</span>
                 <span>
                   라이선스 키를 입력하면 <strong>워터마크가 제거</strong>되고{" "}
@@ -352,7 +441,7 @@ export default function Home() {
                 </span>
               </div>
             ) : (
-              <div className="p-3 bg-emerald-950/30 border border-emerald-500/20 rounded-xl text-[11px] text-emerald-300/90 leading-relaxed flex items-start gap-2">
+              <div className="mt-2 p-3 bg-emerald-950/30 border border-emerald-500/20 rounded-xl text-[11px] text-emerald-300/90 leading-relaxed flex items-start gap-2">
                 <span className="text-base shrink-0">✨</span>
                 <span>
                   TinyOG PRO 모드가 활성화되었습니다. 워터마크가 숨겨지고 모든 테마를 자유롭게 생성할 수 있습니다.
@@ -536,7 +625,7 @@ export default function Home() {
                   />
                 </svg>
                 <h3 className="text-sm font-semibold text-slate-200">
-                  HTML 메타 태그 & 내보내기
+                  HTML 메타 태그 &amp; 내보내기
                 </h3>
               </div>
 
@@ -651,11 +740,41 @@ export default function Home() {
         </div>
       </div>
 
+      {/* 푸터 영역 (Lemon Squeezy 심사 요건) */}
+      <footer className="w-full max-w-5xl mt-16 pt-8 border-t border-slate-800/80 text-center flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+          <span className="font-semibold text-slate-300">TinyOG</span>
+          <span>•</span>
+          <span>Lifetime Pass</span>
+          <span>•</span>
+          <span>One-time payment $29</span>
+          <span>•</span>
+          <span className="text-emerald-400 font-medium">14-day refund guarantee</span>
+        </div>
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 text-slate-400 text-[11px]">
+          <a
+            href={CHECKOUT_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+          >
+            Buy Lifetime Pass ($29)
+          </a>
+          <span>•</span>
+          <a
+            href="mailto:support@tinyog.com"
+            className="hover:text-slate-200 transition-colors"
+          >
+            Support: support@tinyog.com
+          </a>
+        </div>
+      </footer>
+
       {/* 플로팅 토스트 알림 */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-900/95 border border-blue-500/40 text-slate-100 shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-3 duration-200">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-900/95 border border-purple-500/40 text-slate-100 shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-3 duration-200">
           <svg
-            className="w-5 h-5 text-blue-400 shrink-0"
+            className="w-5 h-5 text-purple-400 shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -664,7 +783,7 @@ export default function Home() {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
             />
           </svg>
           <span className="text-xs font-medium">{toastMessage}</span>
