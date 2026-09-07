@@ -404,31 +404,11 @@ export default function Home() {
               className="w-full px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all font-mono"
             />
 
-            {/* License CTA Link */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] pt-1 px-1">
-              <span className="text-slate-400">Don&apos;t have a key yet?</span>
-              <a
-                href={CHECKOUT_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="text-purple-400 hover:text-purple-300 font-semibold transition-colors inline-flex items-center gap-1 group"
-              >
-                <span>Get your Lifetime Pass ($29)</span>
-                <span className="transition-transform group-hover:translate-x-0.5">
-                  →
-                </span>
-              </a>
-            </div>
-
-            {/* Status Guide Banners */}
+            {/* License Helper Note */}
             {!hasKey ? (
-              <div className="mt-2 p-3 bg-blue-950/30 border border-blue-500/20 rounded-xl text-[11px] text-blue-300/90 leading-relaxed flex items-start gap-2">
-                <span className="text-base shrink-0">💡</span>
-                <span>
-                  Enter a license key to <strong>remove the watermark</strong> and{" "}
-                  <strong>unlock all PRO themes (Gradient, Terminal)</strong>.
-                </span>
-              </div>
+              <p className="text-[11px] text-slate-400 px-1 pt-1 leading-relaxed">
+                Enter your license key to remove watermarks and unlock Pro themes.
+              </p>
             ) : (
               <div className="mt-2 p-3 bg-emerald-950/30 border border-emerald-500/20 rounded-xl text-[11px] text-emerald-300/90 leading-relaxed flex items-start gap-2">
                 <span className="text-base shrink-0">✨</span>
