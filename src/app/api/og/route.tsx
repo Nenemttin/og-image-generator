@@ -3,15 +3,31 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
-// Pretendard Bold 폰트 바이너리 로드
-const fontPromise = fetch(
-  'https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff/Pretendard-Bold.woff'
-).then((res) => {
-  if (!res.ok) {
-    throw new Error(`Failed to fetch font: ${res.statusText}`);
+// Pretendard Bold 폰트 바이너리 안전 로드 및 인메모리 캐싱
+let cachedFont: ArrayBuffer | null = null;
+let fontFetchPromise: Promise<ArrayBuffer | null> | null = null;
+
+async function getPretendardFont(): Promise<ArrayBuffer | null> {
+  if (cachedFont) return cachedFont;
+  if (!fontFetchPromise) {
+    fontFetchPromise = fetch(
+      'https://cdn.jsdelivr.net/gh/orioncactus/pretendard/packages/pretendard/dist/web/static/woff/Pretendard-Bold.woff'
+    )
+      .then(async (res) => {
+        if (!res.ok) {
+          console.warn(`Font fetch returned status ${res.status}: ${res.statusText}`);
+          return null;
+        }
+        cachedFont = await res.arrayBuffer();
+        return cachedFont;
+      })
+      .catch((err) => {
+        console.warn('Font network error, falling back to system sans-serif:', err);
+        return null;
+      });
   }
-  return res.arrayBuffer();
-});
+  return fontFetchPromise;
+}
 
 // Lemon Squeezy 라이선스 키 검증 함수
 async function validateLicenseKey(key: string | null): Promise<boolean> {
@@ -53,10 +69,19 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
 
-    const title = searchParams.get('title') || 'Default Title';
-    const tag = searchParams.get('tag') || 'Next.js';
-    const requestedTheme = (searchParams.get('theme') || 'dark').toLowerCase();
-    const userKey = searchParams.get('key');
+    // 1. 입력값 길이 제한 및 방어 (DoS / 메모리 고갈 방지)
+    const rawTitle = searchParams.get('title') || 'Default Title';
+    const rawTag = searchParams.get('tag') || 'Next.js';
+    const rawDescription = searchParams.get('description') || '';
+    const rawTheme = searchParams.get('theme') || 'dark';
+    const rawKey = searchParams.get('key');
+
+    // title: 최대 100자, description: 최대 200자, tag: 최대 30자
+    const title = rawTitle.slice(0, 100).trim() || 'Default Title';
+    const tag = rawTag.slice(0, 30).trim() || 'Next.js';
+    const description = rawDescription.slice(0, 200).trim();
+    const requestedTheme = rawTheme.slice(0, 20).toLowerCase();
+    const userKey = rawKey ? rawKey.slice(0, 120).trim() : null;
 
     // Lemon Squeezy 공식 API를 통한 라이선스 키 검증
     const isPro = await validateLicenseKey(userKey);
@@ -67,8 +92,8 @@ export async function GET(request: NextRequest) {
     // 무료 유저는 프리미엄 테마 요청 시 기본 dark 테마로 강제 대체
     const activeTheme = !isPro && isPremiumTheme ? 'dark' : requestedTheme;
 
-    // 폰트 바이너리를 ArrayBuffer로 획득
-    const fontData = await fontPromise;
+    // 폰트 바이너리를 안전하게 획득 (실패 시 null)
+    const fontData = await getPretendardFont();
 
     // 테마별 렌더링 JSX
     const renderContent = () => {
@@ -110,32 +135,51 @@ export async function GET(request: NextRequest) {
                 </div>
               </div>
 
-              {/* 중앙 타이틀 */}
+              {/* 중앙 타이틀 & 설명 */}
               <div
                 style={{
                   display: 'flex',
-                  alignItems: 'center',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
                   flex: 1,
                   padding: '24px 0',
                 }}
               >
                 <h1
                   style={{
-                    fontSize: 64,
+                    fontSize: description ? 54 : 64,
                     fontWeight: 700,
                     color: '#ffffff',
-                    lineHeight: 1.3,
+                    lineHeight: 1.25,
                     margin: 0,
                     letterSpacing: '-0.02em',
                     wordBreak: 'keep-all',
                     display: '-webkit-box',
-                    WebkitLineClamp: 3,
+                    WebkitLineClamp: description ? 2 : 3,
                     WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
                   }}
                 >
                   {title}
                 </h1>
+                {description ? (
+                  <p
+                    style={{
+                      fontSize: 26,
+                      fontWeight: 500,
+                      color: 'rgba(255, 255, 255, 0.85)',
+                      lineHeight: 1.4,
+                      margin: '16px 0 0 0',
+                      wordBreak: 'keep-all',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {description}
+                  </p>
+                ) : null}
               </div>
 
               {/* 하단 워터마크 (isPro가 false일 때만 노출) */}
@@ -211,32 +255,51 @@ export async function GET(request: NextRequest) {
                 </div>
               </div>
 
-              {/* 중앙 타이틀 */}
+              {/* 중앙 타이틀 & 설명 */}
               <div
                 style={{
                   display: 'flex',
-                  alignItems: 'center',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
                   flex: 1,
                   padding: '24px 0',
                 }}
               >
                 <h1
                   style={{
-                    fontSize: 64,
+                    fontSize: description ? 54 : 64,
                     fontWeight: 700,
                     color: '#0f172a',
-                    lineHeight: 1.3,
+                    lineHeight: 1.25,
                     margin: 0,
                     letterSpacing: '-0.02em',
                     wordBreak: 'keep-all',
                     display: '-webkit-box',
-                    WebkitLineClamp: 3,
+                    WebkitLineClamp: description ? 2 : 3,
                     WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
                   }}
                 >
                   {title}
                 </h1>
+                {description ? (
+                  <p
+                    style={{
+                      fontSize: 26,
+                      fontWeight: 500,
+                      color: '#64748b',
+                      lineHeight: 1.4,
+                      margin: '16px 0 0 0',
+                      wordBreak: 'keep-all',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {description}
+                  </p>
+                ) : null}
               </div>
 
               {/* 하단 워터마크 (isPro가 false일 때만 노출) */}
@@ -359,11 +422,12 @@ export async function GET(request: NextRequest) {
                   </div>
                 </div>
 
-                {/* 중앙 터미널 프롬프트 & 타이틀 */}
+                {/* 중앙 터미널 프롬프트 & 타이틀 & 설명 */}
                 <div
                   style={{
                     display: 'flex',
-                    alignItems: 'center',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
                     flex: 1,
                     padding: '24px 0',
                   }}
@@ -379,30 +443,50 @@ export async function GET(request: NextRequest) {
                     <span
                       style={{
                         color: '#22c55e',
-                        fontSize: 52,
+                        fontSize: description ? 44 : 52,
                         fontWeight: 700,
-                        lineHeight: 1.3,
+                        lineHeight: 1.25,
                       }}
                     >
                       ❯
                     </span>
-                    <h1
-                      style={{
-                        fontSize: 58,
-                        fontWeight: 700,
-                        color: '#f4f4f5',
-                        lineHeight: 1.3,
-                        margin: 0,
-                        letterSpacing: '-0.02em',
-                        wordBreak: 'keep-all',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      {title}
-                    </h1>
+                    <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                      <h1
+                        style={{
+                          fontSize: description ? 48 : 58,
+                          fontWeight: 700,
+                          color: '#f4f4f5',
+                          lineHeight: 1.25,
+                          margin: 0,
+                          letterSpacing: '-0.02em',
+                          wordBreak: 'keep-all',
+                          display: '-webkit-box',
+                          WebkitLineClamp: description ? 2 : 3,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {title}
+                      </h1>
+                      {description ? (
+                        <p
+                          style={{
+                            fontSize: 24,
+                            fontWeight: 500,
+                            color: '#a1a1aa',
+                            lineHeight: 1.4,
+                            margin: '12px 0 0 0',
+                            wordBreak: 'keep-all',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          # {description}
+                        </p>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
 
@@ -483,32 +567,51 @@ export async function GET(request: NextRequest) {
                 </div>
               </div>
 
-              {/* 중앙 타이틀 */}
+              {/* 중앙 타이틀 & 설명 */}
               <div
                 style={{
                   display: 'flex',
-                  alignItems: 'center',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
                   flex: 1,
                   padding: '24px 0',
                 }}
               >
                 <h1
                   style={{
-                    fontSize: 64,
+                    fontSize: description ? 54 : 64,
                     fontWeight: 700,
                     color: '#f8fafc',
-                    lineHeight: 1.3,
+                    lineHeight: 1.25,
                     margin: 0,
                     letterSpacing: '-0.02em',
                     wordBreak: 'keep-all',
                     display: '-webkit-box',
-                    WebkitLineClamp: 3,
+                    WebkitLineClamp: description ? 2 : 3,
                     WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
                   }}
                 >
                   {title}
                 </h1>
+                {description ? (
+                  <p
+                    style={{
+                      fontSize: 26,
+                      fontWeight: 500,
+                      color: '#94a3b8',
+                      lineHeight: 1.4,
+                      margin: '16px 0 0 0',
+                      wordBreak: 'keep-all',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {description}
+                  </p>
+                ) : null}
               </div>
 
               {/* 하단 워터마크 (isPro가 false일 때만 노출) */}
@@ -553,21 +656,115 @@ export async function GET(request: NextRequest) {
       width: 1200,
       height: 630,
       headers: {
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Cache-Control':
+          'public, max-age=86400, s-maxage=31536000, stale-while-revalidate=86400',
       },
-      fonts: [
-        {
-          name: 'Pretendard',
-          data: fontData,
-          style: 'normal',
-          weight: 700,
-        },
-      ],
+      fonts: fontData
+        ? [
+            {
+              name: 'Pretendard',
+              data: fontData,
+              style: 'normal',
+              weight: 700,
+            },
+          ]
+        : undefined,
     });
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(`Failed to generate the image: ${message}`, {
-      status: 500,
-    });
+    console.error('TinyOG Edge API Generation Error:', error);
+
+    // 예외 발생 시 크롤러/클라이언트에게 500 에러 대신 안전한 Fallback 이미지 반환
+    try {
+      return new ImageResponse(
+        (
+          <div
+            style={{
+              height: '100%',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              backgroundColor: '#0f172a',
+              padding: '60px 80px',
+              fontFamily: 'sans-serif',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  color: '#60a5fa',
+                  padding: '8px 24px',
+                  borderRadius: '9999px',
+                  fontSize: 22,
+                  fontWeight: 700,
+                  letterSpacing: '0.05em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                TinyOG
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                flex: 1,
+                padding: '24px 0',
+              }}
+            >
+              <h1
+                style={{
+                  fontSize: 56,
+                  fontWeight: 700,
+                  color: '#f8fafc',
+                  lineHeight: 1.3,
+                  margin: 0,
+                  wordBreak: 'keep-all',
+                }}
+              >
+                Social Card Preview
+              </h1>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                paddingTop: '24px',
+              }}
+            >
+              <span
+                style={{
+                  color: '#94a3b8',
+                  fontSize: 20,
+                  fontWeight: 700,
+                }}
+              >
+                tinyog.cloud
+              </span>
+            </div>
+          </div>
+        ),
+        {
+          width: 1200,
+          height: 630,
+          headers: {
+            'Cache-Control': 'no-store, must-revalidate',
+          },
+        }
+      );
+    } catch {
+      return new Response('Failed to generate image', {
+        status: 500,
+        headers: { 'Content-Type': 'text/plain' },
+      });
+    }
   }
 }
