@@ -1,5 +1,7 @@
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
+import { ThemeId } from '@/types';
+import { THEMES, PRO_THEME_IDS } from '@/lib/constants';
 
 export const runtime = 'edge';
 
@@ -86,13 +88,13 @@ export async function GET(request: NextRequest) {
     // Lemon Squeezy 공식 API를 통한 라이선스 키 검증
     const isPro = await validateLicenseKey(userKey);
 
-    // 프리미엄 테마 검사 (gradient, terminal)
-    const isPremiumTheme = requestedTheme === 'gradient' || requestedTheme === 'terminal';
-
     // 요청된 테마 유효성 검사 (PRO 테마도 데모 렌더링을 허용하여 미리보기 정상 출력)
-    const activeTheme = ['dark', 'gradient', 'minimal', 'terminal'].includes(requestedTheme)
-      ? requestedTheme
+    const activeTheme: ThemeId = THEMES.some((t) => t.id === requestedTheme)
+      ? (requestedTheme as ThemeId)
       : 'dark';
+
+    // 프리미엄 테마 검사 (gradient, terminal)
+    const isPremiumTheme = PRO_THEME_IDS.includes(activeTheme);
 
     // 폰트 바이너리를 안전하게 획득 (실패 시 null)
     const fontData = await getPretendardFont();
