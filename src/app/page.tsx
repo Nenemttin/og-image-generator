@@ -117,7 +117,7 @@ export default function Home() {
     try {
       await navigator.clipboard.writeText(metaTagSnippet);
       setHtmlCopied(true);
-      showToast("HTML 메타 태그가 클립보드에 복사되었습니다!");
+      showToast("TinyOG 메타 태그가 클립보드에 복사되었습니다!");
       setTimeout(() => setHtmlCopied(false), 2000);
     } catch {
       showToast("복사에 실패했습니다.");
@@ -129,7 +129,7 @@ export default function Home() {
     try {
       await navigator.clipboard.writeText(fullOgUrl);
       setUrlCopied(true);
-      showToast("이미지 URL이 클립보드에 복사되었습니다!");
+      showToast("TinyOG 이미지 URL이 클립보드에 복사되었습니다!");
       setTimeout(() => setUrlCopied(false), 2000);
     } catch {
       showToast("복사에 실패했습니다.");
@@ -149,11 +149,11 @@ export default function Home() {
       link.href = blobUrl;
 
       // 파일명 안전 처리
-      const safeTitle = (debouncedTitle || "og-image")
+      const safeTitle = (debouncedTitle || "thumbnail")
         .replace(/[^a-zA-Z0-9가-힣\s-_]/g, "")
         .trim()
         .slice(0, 30);
-      link.download = `${safeTitle || "og-image"}-${theme}.png`;
+      link.download = `tinyog-${safeTitle || "thumbnail"}-${theme}.png`;
 
       document.body.appendChild(link);
       link.click();
@@ -171,13 +171,13 @@ export default function Home() {
 
   const presets = [
     {
-      title: "Next.js 14 & @vercel/og로 소셜 미리보기 완성하기",
-      tag: "FRONTEND",
+      title: "TinyOG: 링크 하나로 끝나는 초경량 동적 썸네일",
+      tag: "RELEASE",
       theme: "dark" as const,
     },
     {
-      title: "Dynamic Open Graph Images with Gradient Theme",
-      tag: "DESIGN",
+      title: "Zero-config Open Graph Image Generation at the Edge",
+      tag: "PERF",
       theme: "gradient" as const,
     },
     {
@@ -186,8 +186,8 @@ export default function Home() {
       theme: "minimal" as const,
     },
     {
-      title: "git commit -m 'Release v1.0.0 for Production'",
-      tag: "DEV-OPS",
+      title: "git commit -m 'Release TinyOG v1.0 with Edge Runtime'",
+      tag: "CLI",
       theme: "terminal" as const,
     },
   ];
@@ -203,13 +203,30 @@ export default function Home() {
       <div className="w-full max-w-5xl mb-10 text-center md:text-left">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
           <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-          OG Image Studio
+          Ultra-Fast OG Maker
         </div>
-        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-          OG Image Generator
-        </h1>
-        <p className="mt-2 text-slate-400 text-sm md:text-base max-w-xl">
-          실시간 텍스트 및 테마 설정으로 1200×630 소셜 썸네일을 제작하고, PRO 키로 워터마크 제거와 프리미엄 테마를 경험하세요.
+
+        {/* 로고 & 뱃지 */}
+        <div className="flex items-center justify-center md:justify-start gap-3">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+            TinyOG
+          </h1>
+          <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-gradient-to-r from-blue-500/20 to-indigo-500/20 border border-blue-400/30 text-blue-300 font-bold tracking-wider shadow-sm uppercase">
+            BETA
+          </span>
+          {hasKey && (
+            <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-bold tracking-wider shadow-sm uppercase">
+              PRO
+            </span>
+          )}
+        </div>
+
+        {/* 서브 카피 */}
+        <p className="mt-3 text-slate-300 text-base md:text-lg font-medium max-w-2xl">
+          TinyOG — 링크 하나로 끝나는 초경량 소셜 썸네일
+        </p>
+        <p className="mt-1 text-slate-400 text-xs md:text-sm max-w-xl">
+          블로거와 개발자를 위한 Zero-config 동적 오픈그래프 카드 자동 생성기. 실시간 미리보기로 확인하고 즉시 내보내세요.
         </p>
       </div>
 
@@ -325,7 +342,7 @@ export default function Home() {
               className="w-full px-4 py-3 bg-slate-950 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all font-mono"
             />
 
-            {/* 무료 유저 가이드 안내 문구 */}
+            {/* 안내 문구 */}
             {!hasKey ? (
               <div className="p-3 bg-blue-950/30 border border-blue-500/20 rounded-xl text-[11px] text-blue-300/90 leading-relaxed flex items-start gap-2">
                 <span className="text-base shrink-0">💡</span>
@@ -338,7 +355,7 @@ export default function Home() {
               <div className="p-3 bg-emerald-950/30 border border-emerald-500/20 rounded-xl text-[11px] text-emerald-300/90 leading-relaxed flex items-start gap-2">
                 <span className="text-base shrink-0">✨</span>
                 <span>
-                  PRO 모드가 활성화되었습니다. 워터마크가 숨겨지고 모든 테마를 자유롭게 생성할 수 있습니다.
+                  TinyOG PRO 모드가 활성화되었습니다. 워터마크가 숨겨지고 모든 테마를 자유롭게 생성할 수 있습니다.
                 </span>
               </div>
             )}
@@ -408,7 +425,7 @@ export default function Home() {
           {/* 엔드포인트 URL 정보 */}
           <div className="pt-4 border-t border-slate-800/80 space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-400">
-              <span>이미지 엔드포인트 URL</span>
+              <span>TinyOG 엔드포인트 URL</span>
               <button
                 type="button"
                 onClick={handleCopyUrl}
@@ -433,7 +450,7 @@ export default function Home() {
                 <span className="w-3 h-3 rounded-full bg-yellow-500/80 inline-block" />
                 <span className="w-3 h-3 rounded-full bg-green-500/80 inline-block" />
                 <span className="ml-2 text-xs font-medium text-slate-400">
-                  미리보기 (1200 × 630 px) —{" "}
+                  TinyOG 미리보기 (1200 × 630 px) —{" "}
                   <span className="text-blue-400 font-semibold uppercase">
                     {theme} 테마
                   </span>
@@ -494,7 +511,7 @@ export default function Home() {
               <img
                 key={ogPath}
                 src={ogPath}
-                alt={`OG Image for ${title}`}
+                alt={`TinyOG Preview for ${title}`}
                 className="w-full h-full object-cover transition-opacity duration-300"
                 onLoad={() => setIsLoading(false)}
               />
@@ -628,7 +645,7 @@ export default function Home() {
             </div>
 
             <p className="text-[11px] text-slate-500">
-              💡 웹사이트의 <code className="text-slate-400">&lt;head&gt;</code> 태그 내에 위 코드를 붙여넣으면 소셜 미디어에서 풍부한 미리보기가 표시됩니다.
+              💡 TinyOG 메타 태그를 웹사이트의 <code className="text-slate-400">&lt;head&gt;</code> 태그 내에 붙여넣으면 소셜 미디어(X, 카카오톡, 슬랙 등)에서 풍부한 미리보기가 표시됩니다.
             </p>
           </div>
         </div>
