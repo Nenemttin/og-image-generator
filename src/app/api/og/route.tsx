@@ -13,6 +13,42 @@ const fontPromise = fetch(
   return res.arrayBuffer();
 });
 
+// Lemon Squeezy 라이선스 키 검증 함수
+async function validateLicenseKey(key: string | null): Promise<boolean> {
+  if (!key) return false;
+
+  // 로컬/개발 환경용 마스터 키 검증 (선택적 fallback)
+  if (process.env.PRO_LICENSE_KEY && key === process.env.PRO_LICENSE_KEY) {
+    return true;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append('license_key', key);
+
+    const response = await fetch(
+      'https://api.lemonsqueezy.com/v1/licenses/validate',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
+        body: formData,
+        next: { revalidate: 3600 },
+      }
+    );
+
+    if (!response.ok) {
+      return false;
+    }
+
+    const data = await response.json();
+    return Boolean(data && data.valid === true);
+  } catch {
+    return false;
+  }
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -22,9 +58,8 @@ export async function GET(request: NextRequest) {
     const requestedTheme = (searchParams.get('theme') || 'dark').toLowerCase();
     const userKey = searchParams.get('key');
 
-    // 라이선스 키 검증 (환경 변수와 일치 여부)
-    const proLicenseKey = process.env.PRO_LICENSE_KEY;
-    const isPro = Boolean(proLicenseKey && userKey && userKey === proLicenseKey);
+    // Lemon Squeezy 공식 API를 통한 라이선스 키 검증
+    const isPro = await validateLicenseKey(userKey);
 
     // 프리미엄 테마 검사 (gradient, terminal)
     const isPremiumTheme = requestedTheme === 'gradient' || requestedTheme === 'terminal';
