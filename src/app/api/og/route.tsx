@@ -1,7 +1,9 @@
 import { ImageResponse } from '@vercel/og';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { ThemeId } from '@/types';
 import { THEMES, PRO_THEME_IDS } from '@/lib/constants';
+import { validateLicenseKey } from '@/lib/license';
+import { sanitizeText } from '@/lib/sanitize';
 
 export const runtime = 'edge';
 
@@ -31,66 +33,61 @@ async function getPretendardFont(): Promise<ArrayBuffer | null> {
   return fontFetchPromise;
 }
 
-// Lemon Squeezy 라이선스 키 검증 함수
-async function validateLicenseKey(key: string | null): Promise<boolean> {
-  if (!key) return false;
-
-  // 로컬/개발 환경용 마스터 키 검증 (선택적 fallback)
-  if (process.env.PRO_LICENSE_KEY && key === process.env.PRO_LICENSE_KEY) {
-    return true;
-  }
-
-  try {
-    const formData = new FormData();
-    formData.append('license_key', key);
-
-    const response = await fetch(
-      'https://api.lemonsqueezy.com/v1/licenses/validate',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-        },
-        body: formData,
-        next: { revalidate: 3600 },
-      }
-    );
-
-    if (!response.ok) {
-      return false;
-    }
-
-    const data = await response.json();
-    return Boolean(data && data.valid === true);
-  } catch {
-    return false;
-  }
-}
+// 허용된 쿼리 파라미터 화이트리스트 (캐시 버스팅 공격 방어용)
+const ALLOWED_PARAMS = new Set([
+  'title',
+  'tag',
+  'theme',
+  'description',
+  'key',
+  'licenseKey',
+]);
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const url = new URL(request.url);
+    const { searchParams } = url;
 
-    // 1. 입력값 길이 제한 및 방어 (DoS / 메모리 고갈 방지)
-    const rawTitle = searchParams.get('title') || 'Default Title';
-    const rawTag = searchParams.get('tag') || 'Next.js';
-    const rawDescription = searchParams.get('description') || '';
-    const rawTheme = searchParams.get('theme') || 'dark';
+    // Cache-Busting DoS 방어: 허용되지 않은 불필요한 쿼리 파라미터가 유입된 경우 308 영구 리다이렉트로 표준 URL 정규화
+    const incomingKeys = Array.from(searchParams.keys());
+    const hasExtraneousParams = incomingKeys.some((k) => !ALLOWED_PARAMS.has(k));
+
+    if (hasExtraneousParams) {
+      const canonicalParams = new URLSearchParams();
+      for (const allowedKey of ALLOWED_PARAMS) {
+        const val = searchParams.get(allowedKey);
+        if (val !== null) {
+          canonicalParams.set(allowedKey, val);
+        }
+      }
+      const queryString = canonicalParams.toString();
+      const canonicalUrl = new URL(
+        queryString ? `${url.pathname}?${queryString}` : url.pathname,
+        request.url
+      );
+
+      return NextResponse.redirect(canonicalUrl, {
+        status: 308,
+        headers: {
+          'Cache-Control': 'public, max-age=86400, s-maxage=31536000',
+        },
+      });
+    }
+
+    // 1. 입력값 정규화 및 DoS / 특수문자 / 멀티바이트 이모지 방어
+    const title = sanitizeText(searchParams.get('title'), 100, 'Default Title');
+    const tag = sanitizeText(searchParams.get('tag'), 30, 'Next.js');
+    const description = sanitizeText(searchParams.get('description'), 200, '');
+    const requestedTheme = (searchParams.get('theme') || 'dark').slice(0, 20).toLowerCase().trim();
     const rawKey = searchParams.get('key') || searchParams.get('licenseKey');
-
-    // title: 최대 100자, description: 최대 200자, tag: 최대 30자
-    const title = rawTitle.slice(0, 100).trim() || 'Default Title';
-    const tag = rawTag.slice(0, 30).trim() || 'Next.js';
-    const description = rawDescription.slice(0, 200).trim();
-    const requestedTheme = rawTheme.slice(0, 20).toLowerCase();
-    const userKey = rawKey ? rawKey.slice(0, 120).trim() : null;
+    const userKey = rawKey ? rawKey.slice(0, 100).trim() : null;
 
     // 공식 TinyOG 자체 소셜 카드인 경우 워터마크 없이 프로 렌더링
     const isOfficialSiteCard =
       title.toLowerCase().includes('dynamic social cards with one url') &&
       tag.toUpperCase() === 'DEVELOPER TOOL';
 
-    // Lemon Squeezy 공식 API를 통한 라이선스 키 검증
+    // Lemon Squeezy 공식 API 검증 (TTL 캐시 + 타임아웃 방어)
     const isPro = isOfficialSiteCard || (await validateLicenseKey(userKey));
 
     // 요청된 테마 유효성 검사 (PRO 테마도 데모 렌더링을 허용하여 미리보기 정상 출력)
