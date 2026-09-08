@@ -14,6 +14,7 @@ import { ThemeSelector } from "@/components/editor/ThemeSelector";
 import { CardForm } from "@/components/editor/CardForm";
 import { PreviewFrame } from "@/components/preview/PreviewFrame";
 import { ExportPanel } from "@/components/export/ExportPanel";
+import { FaqSection } from "@/components/faq/FaqSection";
 
 export default function Home() {
   const [title, setTitle] = useState(
@@ -335,6 +336,9 @@ export default function Home() {
           />
         </div>
       </div>
+
+      {/* Conversion-Focused Developer FAQ Section */}
+      <FaqSection />
 
       {/* Global Footer with Lemon Squeezy Compliance Links */}
       <footer className="w-full max-w-6xl mt-20 pt-8 border-t border-[#27272a] flex flex-col gap-4 text-xs text-zinc-500">
