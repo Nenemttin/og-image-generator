@@ -1,7 +1,7 @@
 "use client";
 
 import { LicenseVerificationStatus, PresetItem } from "@/types";
-import { CHECKOUT_URL, PRESETS } from "@/lib/constants";
+import { CHECKOUT_URL, PRESETS } from "@/config/constants";
 
 interface CardFormProps {
   title: string;

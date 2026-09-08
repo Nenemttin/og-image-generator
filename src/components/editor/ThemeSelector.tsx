@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ThemeId } from "@/types";
-import { THEMES, CHECKOUT_URL } from "@/lib/constants";
+import { THEMES, CHECKOUT_URL } from "@/config/constants";
 
 interface ThemeSelectorProps {
   currentTheme: ThemeId;

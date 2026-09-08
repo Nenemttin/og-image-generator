@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ThemeId } from "@/types";
-import { CHECKOUT_URL } from "@/lib/constants";
+import { CHECKOUT_URL } from "@/config/constants";
 
 interface ExportPanelProps {
   metaTagSnippet: string;

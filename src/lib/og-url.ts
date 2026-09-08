@@ -1,5 +1,5 @@
 import { CardConfig } from "@/types";
-import { PRODUCTION_DOMAIN } from "./constants";
+import { PRODUCTION_DOMAIN } from "@/config/constants";
 
 /**
  * Generates the relative API path for an Open Graph card
