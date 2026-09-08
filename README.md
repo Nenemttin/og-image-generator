@@ -102,14 +102,14 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 |---|---|:---:|---|---|
 | `title` | `string` | Optional | `"Default Title"` | Card headline. Automatic line wrapping with defense clamp (up to 100 characters). |
 | `tag` | `string` | Optional | `"Next.js"` | Category / section badge displayed in the top pill (up to 30 characters). |
-| `theme` | `string` | Optional | `"dark"` | Visual design theme: `dark`, `minimal`, `gradient`, or `terminal`. |
+| `theme` | `string` | Optional | `"dark"` | Visual design theme: `dark`, `minimal`, `gradient`, `terminal`, `notion`, `bento`, `cyberpunk`, `sunset`. |
 | `key` / `licenseKey` | `string` | Optional | `""` | Lemon Squeezy license key to remove the watermark and unlock commercial PRO themes. |
 
 ---
 
 ## 🎨 Available Themes & PRO Features
 
-TinyOG provides 4 curated visual themes engineered for technical readability:
+TinyOG provides 8 curated visual themes engineered for technical readability:
 
 | Theme Key | Name | Access | Visual Style |
 |---|---|:---:|---|
@@ -117,10 +117,14 @@ TinyOG provides 4 curated visual themes engineered for technical readability:
 | `minimal` | **Minimal** | **Free** | High-contrast editorial white background with sharp typography. |
 | `gradient` | **Gradient** | **PRO** | Vibrant indigo-to-purple tech mesh gradient with frosted glass badge. |
 | `terminal` | **Terminal** | **PRO** | macOS developer console with traffic light controls and monospace syntax. |
+| `notion` | **Notion** | **PRO** | Warm cream background with minimal borders and editorial typography. |
+| `bento` | **Bento** | **PRO** | Modern SaaS glassmorphism bento card with subtle ambient glow. |
+| `cyberpunk` | **Cyberpunk** | **PRO** | High-tech neon cyan and magenta accents on obsidian/violet base. |
+| `sunset` | **Sunset** | **PRO** | Deep orange and violet startup glow gradient with crisp typography. |
 
 ### 💎 Lifetime Pass Benefits ($29 One-Time)
 - **Permanent Watermark Removal**: Clean, unbranded cards for your blogs and commercial products.
-- **Full Access to PRO Themes**: Commercial rights to use `gradient` and `terminal` themes.
+- **Full Access to All 6 PRO Themes**: Commercial rights to use `gradient`, `terminal`, `notion`, `bento`, `cyberpunk`, and `sunset`.
 - **Unlimited Worldwide Edge Calls**: Edge-cached CDN delivery across global PoPs.
 - **No Recurring Subscriptions**: Single one-time purchase with free lifetime updates.
 - **14-Day Money-Back Guarantee**: Full refund if you're not completely satisfied.

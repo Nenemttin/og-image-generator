@@ -208,7 +208,7 @@ export default function Home() {
               EDGE OG ENGINE
             </span>
             <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-400 font-mono font-medium">
-              v1.0
+              v1.1
             </span>
           </div>
 
@@ -318,7 +318,8 @@ export default function Home() {
             displayedImgUrl={displayedImgUrl}
             isImageLoading={isImageLoading}
             isDemoMode={isDemoMode}
-            title={effectiveTitle}
+            title={title}
+            tag={tag}
           />
 
           {/* Modular HTML Meta Tag Export Card */}

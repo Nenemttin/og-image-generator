@@ -5,7 +5,14 @@ export const CHECKOUT_URL =
 
 export const PRODUCTION_DOMAIN = "https://tinyog.cloud";
 
-export const PRO_THEME_IDS: ThemeId[] = ["gradient", "terminal"];
+export const PRO_THEME_IDS: ThemeId[] = [
+  "gradient",
+  "terminal",
+  "notion",
+  "bento",
+  "cyberpunk",
+  "sunset",
+];
 
 export const THEMES: ThemeOption[] = [
   {
@@ -13,6 +20,13 @@ export const THEMES: ThemeOption[] = [
     name: "Dark",
     desc: "Classic navy & matrix grid",
     previewClass: "bg-zinc-900 border-zinc-700",
+    isPro: false,
+  },
+  {
+    id: "minimal",
+    name: "Minimal",
+    desc: "Clean editorial white typography",
+    previewClass: "bg-zinc-100 border-zinc-300",
     isPro: false,
   },
   {
@@ -24,17 +38,41 @@ export const THEMES: ThemeOption[] = [
     isPro: true,
   },
   {
-    id: "minimal",
-    name: "Minimal",
-    desc: "Clean editorial white typography",
-    previewClass: "bg-zinc-100 border-zinc-300",
-    isPro: false,
-  },
-  {
     id: "terminal",
     name: "Terminal",
     desc: "macOS developer console",
     previewClass: "bg-zinc-950 border-zinc-700",
+    isPro: true,
+  },
+  {
+    id: "notion",
+    name: "Notion",
+    desc: "Warm cream & clean typography",
+    previewClass: "bg-[#fbfbfa] border-[#e3e2de]",
+    isPro: true,
+  },
+  {
+    id: "bento",
+    name: "Bento",
+    desc: "Modern SaaS glassmorphic cards",
+    previewClass:
+      "bg-gradient-to-br from-zinc-900 to-zinc-950 border-zinc-700",
+    isPro: true,
+  },
+  {
+    id: "cyberpunk",
+    name: "Cyberpunk",
+    desc: "Neon cyan & magenta high-tech",
+    previewClass:
+      "bg-gradient-to-r from-[#0a0414] to-[#120726] border-cyan-400",
+    isPro: true,
+  },
+  {
+    id: "sunset",
+    name: "Sunset",
+    desc: "Deep orange & violet startup glow",
+    previewClass:
+      "bg-gradient-to-br from-amber-600 via-rose-600 to-indigo-900 border-rose-500",
     isPro: true,
   },
 ];
@@ -46,18 +84,38 @@ export const PRESETS: PresetItem[] = [
     theme: "dark",
   },
   {
-    title: "Zero-Config Open Graph Image Generation at the Edge",
-    tag: "VERCEL / OG",
-    theme: "gradient",
-  },
-  {
     title: "Clean Code Architecture for Modern Engineering Teams",
     tag: "GUIDE",
     theme: "minimal",
   },
   {
-    title: "git commit -m 'Ship TinyOG v1.0 to Production'",
+    title: "Zero-Config Open Graph Image Generation at the Edge",
+    tag: "VERCEL / OG",
+    theme: "gradient",
+  },
+  {
+    title: "git commit -m 'Ship TinyOG v1.1 to Production'",
     tag: "CLI",
     theme: "terminal",
+  },
+  {
+    title: "The Complete Engineering Handbook & Documentation",
+    tag: "DOCS",
+    theme: "notion",
+  },
+  {
+    title: "Modular Component Systems in Modern SaaS Architecture",
+    tag: "SAAS",
+    theme: "bento",
+  },
+  {
+    title: "Building Autonomous AI Agents with Edge Computing",
+    tag: "AI / WEB3",
+    theme: "cyberpunk",
+  },
+  {
+    title: "From Zero to $100K MRR: The Solo Founder Blueprint",
+    tag: "GROWTH",
+    theme: "sunset",
   },
 ];

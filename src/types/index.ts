@@ -1,4 +1,12 @@
-export type ThemeId = "dark" | "gradient" | "minimal" | "terminal";
+export type ThemeId =
+  | "dark"
+  | "minimal"
+  | "gradient"
+  | "terminal"
+  | "notion"
+  | "bento"
+  | "cyberpunk"
+  | "sunset";
 
 export interface ThemeOption {
   id: ThemeId;

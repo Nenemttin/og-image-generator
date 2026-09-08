@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ThemeId } from "@/types";
 import { THEMES, CHECKOUT_URL } from "@/lib/constants";
 
@@ -16,6 +17,14 @@ export function ThemeSelector({
   isProVerified,
   isDemoMode,
 }: ThemeSelectorProps) {
+  const [filter, setFilter] = useState<"all" | "free" | "pro">("all");
+
+  const displayedThemes = THEMES.filter((t) => {
+    if (filter === "free") return !t.isPro;
+    if (filter === "pro") return t.isPro;
+    return true;
+  });
+
   return (
     <div className="space-y-2.5">
       <div className="flex items-center justify-between">
@@ -28,13 +37,51 @@ export function ThemeSelector({
           </span>
         ) : (
           <span className="text-[10px] text-zinc-500 font-mono">
-            2 Free • 2 Pro
+            2 Free • 6 Pro
           </span>
         )}
       </div>
 
+      {/* Category Filter Pills */}
+      <div className="flex items-center gap-1 p-0.5 rounded-lg bg-zinc-950 border border-[#27272a] text-[11px] font-mono">
+        <button
+          type="button"
+          onClick={() => setFilter("all")}
+          className={`flex-1 py-1 rounded text-center transition-colors ${
+            filter === "all"
+              ? "bg-zinc-800 text-zinc-100 font-semibold shadow-xs"
+              : "text-zinc-500 hover:text-zinc-300"
+          }`}
+        >
+          All (8)
+        </button>
+        <button
+          type="button"
+          onClick={() => setFilter("free")}
+          className={`flex-1 py-1 rounded text-center transition-colors ${
+            filter === "free"
+              ? "bg-zinc-800 text-zinc-100 font-semibold shadow-xs"
+              : "text-zinc-500 hover:text-zinc-300"
+          }`}
+        >
+          Free (2)
+        </button>
+        <button
+          type="button"
+          onClick={() => setFilter("pro")}
+          className={`flex-1 py-1 rounded text-center transition-colors ${
+            filter === "pro"
+              ? "bg-zinc-800 text-zinc-100 font-semibold shadow-xs"
+              : "text-zinc-500 hover:text-zinc-300"
+          }`}
+        >
+          PRO (6)
+        </button>
+      </div>
+
+      {/* Theme Grid */}
       <div className="grid grid-cols-2 gap-2">
-        {THEMES.map((t) => {
+        {displayedThemes.map((t) => {
           const isSelected = currentTheme === t.id;
           return (
             <button
@@ -50,10 +97,10 @@ export function ThemeSelector({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span
-                    className={`w-3 h-3 rounded-full border border-zinc-700 ${t.previewClass}`}
+                    className={`w-3 h-3 rounded-full border border-zinc-700 shrink-0 ${t.previewClass}`}
                   />
                   <span
-                    className={`text-xs font-semibold ${
+                    className={`text-xs font-semibold truncate ${
                       isSelected ? "text-white" : "text-zinc-300"
                     }`}
                   >
@@ -62,7 +109,7 @@ export function ThemeSelector({
                 </div>
 
                 {t.isPro && (
-                  <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold uppercase bg-zinc-800 text-zinc-300 border border-zinc-700">
+                  <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold uppercase bg-zinc-800 text-zinc-300 border border-zinc-700 shrink-0">
                     PRO
                   </span>
                 )}
@@ -89,7 +136,7 @@ export function ThemeSelector({
 
           <div className="space-y-1">
             <p className="text-xs font-medium text-zinc-200">
-              Unlock {currentTheme.toUpperCase()} for production use:
+              Unlock {currentTheme.toUpperCase()} &amp; all PRO themes for production:
             </p>
             <ul className="text-[11px] text-zinc-400 space-y-1 pt-0.5">
               <li className="flex items-center gap-1.5">
@@ -98,7 +145,7 @@ export function ThemeSelector({
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="text-zinc-300">✓</span>
-                <span>Full access to Gradient &amp; Terminal themes</span>
+                <span>Full access to 6 PRO themes (Gradient, Terminal, Notion, Bento, Cyberpunk, Sunset)</span>
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="text-zinc-300">✓</span>
