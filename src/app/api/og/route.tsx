@@ -85,8 +85,13 @@ export async function GET(request: NextRequest) {
     const requestedTheme = rawTheme.slice(0, 20).toLowerCase();
     const userKey = rawKey ? rawKey.slice(0, 120).trim() : null;
 
+    // 공식 TinyOG 자체 소셜 카드인 경우 워터마크 없이 프로 렌더링
+    const isOfficialSiteCard =
+      title.toLowerCase().includes('dynamic social cards with one url') &&
+      tag.toUpperCase() === 'DEVELOPER TOOL';
+
     // Lemon Squeezy 공식 API를 통한 라이선스 키 검증
-    const isPro = await validateLicenseKey(userKey);
+    const isPro = isOfficialSiteCard || (await validateLicenseKey(userKey));
 
     // 요청된 테마 유효성 검사 (PRO 테마도 데모 렌더링을 허용하여 미리보기 정상 출력)
     const activeTheme: ThemeId = THEMES.some((t) => t.id === requestedTheme)

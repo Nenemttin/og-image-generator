@@ -19,19 +19,19 @@ export const metadata: Metadata = {
   },
   title: "TinyOG — Lightning-fast Dynamic Social Cards with One URL",
   description:
-    "Zero-config Open Graph image generator for developers and bloggers. Preview in real-time and drop dynamic URLs straight into your HTML meta tags.",
+    "Generate high-converting, dynamic Open Graph images at the Edge with a single URL. Zero config, pure speed.",
   openGraph: {
     title: "TinyOG — Lightning-fast Dynamic Social Cards with One URL",
     description:
-      "Zero-config Open Graph image generator for developers and bloggers. Preview in real-time and drop dynamic URLs straight into your HTML meta tags.",
+      "Generate high-converting, dynamic Open Graph images at the Edge with a single URL. Zero config, pure speed.",
     url: "https://tinyog.cloud",
     siteName: "TinyOG",
     images: [
       {
-        url: "https://tinyog.cloud/api/og?title=TinyOG&tag=TOOL",
+        url: "https://tinyog.cloud/api/og?title=Dynamic+Social+Cards+with+One+URL&tag=DEVELOPER+TOOL&theme=gradient",
         width: 1200,
         height: 630,
-        alt: "TinyOG Preview Card",
+        alt: "TinyOG — Lightning-fast Dynamic Social Cards with One URL",
       },
     ],
     locale: "en_US",
@@ -41,9 +41,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "TinyOG — Lightning-fast Dynamic Social Cards with One URL",
     description:
-      "Zero-config Open Graph image generator for developers and bloggers. Preview in real-time and drop dynamic URLs straight into your HTML meta tags.",
+      "Generate high-converting, dynamic Open Graph images at the Edge with a single URL. Zero config, pure speed.",
     images: [
-      "https://tinyog.cloud/api/og?title=TinyOG&tag=TOOL",
+      "https://tinyog.cloud/api/og?title=Dynamic+Social+Cards+with+One+URL&tag=DEVELOPER+TOOL&theme=gradient",
     ],
   },
 };
