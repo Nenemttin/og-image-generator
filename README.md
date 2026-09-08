@@ -9,12 +9,12 @@
 [![Edge Runtime](https://img.shields.io/badge/Edge_Runtime-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![License](https://img.shields.io/badge/License-Proprietary_%2F_Lifetime_Pass-8b5cf6?style=for-the-badge)](https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e)
+[![License](https://img.shields.io/badge/License-Proprietary_%2F_Lifetime_Pass-8b5cf6?style=for-the-badge)](https://tinyog.lemonsqueezy.com/checkout/buy/f3a4a41a-fcd9-4e51-aaf0-5014089676a3)
 [![Status](https://img.shields.io/badge/Status-Live-10B981?style=for-the-badge)](https://tinyog.cloud)
 
 <br />
 
-[**Launch Studio**](https://tinyog.cloud) • [**Get Lifetime Pass ($29)**](https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e) • [**API Documentation**](#-quick-integration) • [**Themes & Pro**](#-available-themes--pro-features) • [**Legal & Policies**](#-legal--compliance)
+[**Launch Studio**](https://tinyog.cloud) • [**Get Lifetime Pass ($29)**](https://tinyog.lemonsqueezy.com/checkout/buy/f3a4a41a-fcd9-4e51-aaf0-5014089676a3) • [**API Documentation**](#-quick-integration) • [**Themes & Pro**](#-available-themes--pro-features) • [**Legal & Policies**](#-legal--compliance)
 
 </div>
 
@@ -125,7 +125,7 @@ TinyOG provides 4 curated visual themes engineered for technical readability:
 - **No Recurring Subscriptions**: Single one-time purchase with free lifetime updates.
 - **14-Day Money-Back Guarantee**: Full refund if you're not completely satisfied.
 
-👉 [**Get Your Lifetime Pass on Lemon Squeezy ($29) →**](https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e)
+👉 [**Get Your Lifetime Pass on Lemon Squeezy ($29) →**](https://tinyog.lemonsqueezy.com/checkout/buy/f3a4a41a-fcd9-4e51-aaf0-5014089676a3)
 
 ---
 
@@ -184,4 +184,4 @@ PRO_LICENSE_KEY=your_test_license_key_here
 
 ## 📄 License
 
-The TinyOG web application and API service are provided under a commercial license with free tier usage. Commercial watermark removal and PRO themes are governed by the [TinyOG Lifetime Pass](https://tinyog.lemonsqueezy.com/checkout/buy/50754932-62b6-4a13-af8c-5855c124da1e).
+The TinyOG web application and API service are provided under a commercial license with free tier usage. Commercial watermark removal and PRO themes are governed by the [TinyOG Lifetime Pass](https://tinyog.lemonsqueezy.com/checkout/buy/f3a4a41a-fcd9-4e51-aaf0-5014089676a3).
