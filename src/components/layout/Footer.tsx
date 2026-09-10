@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import { CHECKOUT_URL } from "@/config/constants";
+import { CheckoutButton } from "@/components/ui/CheckoutButton";
 
 interface FooterProps {
   isProVerified: boolean;
@@ -23,14 +25,12 @@ export function Footer({ isProVerified }: FooterProps) {
         <div className="flex items-center gap-4 font-sans">
           {!isProVerified && (
             <>
-              <a
-                href={CHECKOUT_URL}
-                target="_blank"
-                rel="noreferrer"
+              <CheckoutButton
+                source="footer"
                 className="text-zinc-300 hover:text-white font-medium transition-colors"
               >
                 Buy Lifetime Pass ($29) →
-              </a>
+              </CheckoutButton>
               <span>•</span>
             </>
           )}

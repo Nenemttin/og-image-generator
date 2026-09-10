@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { ThemeId } from "@/types";
-import { THEMES, CHECKOUT_URL } from "@/config/constants";
+import { THEMES } from "@/config/constants";
+import { CheckoutButton } from "@/components/ui/CheckoutButton";
 
 interface ThemeSelectorProps {
   currentTheme: ThemeId;
@@ -154,15 +155,13 @@ export function ThemeSelector({
             </ul>
           </div>
 
-          <a
-            href={CHECKOUT_URL}
-            target="_blank"
-            rel="noreferrer"
+          <CheckoutButton
+            source="theme_selector"
             className="w-full py-2 px-3 rounded-lg bg-white hover:bg-[#e4e4e7] text-black font-semibold text-xs text-center transition-colors duration-150 flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98]"
           >
             <span>Get Lifetime Pass ($29)</span>
             <span>→</span>
-          </a>
+          </CheckoutButton>
         </div>
       )}
     </div>

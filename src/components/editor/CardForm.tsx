@@ -1,7 +1,8 @@
 "use client";
 
 import { LicenseVerificationStatus, PresetItem } from "@/types";
-import { CHECKOUT_URL, PRESETS } from "@/config/constants";
+import { PRESETS } from "@/config/constants";
+import { CheckoutButton } from "@/components/ui/CheckoutButton";
 
 interface CardFormProps {
   title: string;
@@ -118,14 +119,12 @@ export function CardForm({
         ) : licenseStatus === "invalid" ? (
           <p className="text-[11px] text-rose-400 font-mono flex items-center justify-between">
             <span>✕ Invalid key.</span>
-            <a
-              href={CHECKOUT_URL}
-              target="_blank"
-              rel="noreferrer"
+            <CheckoutButton
+              source="card_form_invalid_key"
               className="underline hover:text-rose-300 font-sans font-medium"
             >
               Buy Lifetime Pass ($29) →
-            </a>
+            </CheckoutButton>
           </p>
         ) : (
           <p className="text-[11px] text-zinc-500">

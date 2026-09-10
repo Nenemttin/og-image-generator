@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ThemeId } from "@/types";
-import { CHECKOUT_URL } from "@/config/constants";
+import { CheckoutButton } from "@/components/ui/CheckoutButton";
 
 interface ExportPanelProps {
   metaTagSnippet: string;
@@ -220,14 +220,12 @@ export function ExportPanel({
           <span className="text-zinc-300 font-mono">ℹ</span>
           <div className="leading-relaxed text-[11px]">
             Rendering in <strong>PRO Demo Mode</strong> (includes demo watermark). To remove watermarks for commercial use, activate your{" "}
-            <a
-              href={CHECKOUT_URL}
-              target="_blank"
-              rel="noreferrer"
+            <CheckoutButton
+              source="export_panel_demo"
               className="text-white underline hover:text-zinc-300 font-semibold"
             >
               Lifetime Pass ($29) →
-            </a>
+            </CheckoutButton>
           </div>
         </div>
       )}
