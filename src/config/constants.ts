@@ -1,6 +1,7 @@
 import { ThemeId, ThemeOption, PresetItem } from "@/types";
 
 export const CHECKOUT_URL =
+  process.env.NEXT_PUBLIC_LEMONSQUEEZY_CHECKOUT_URL ||
   "https://tinyog.lemonsqueezy.com/checkout/buy/f3a4a41a-fcd9-4e51-aaf0-5014089676a3";
 
 export const PRODUCTION_DOMAIN = "https://tinyog.cloud";

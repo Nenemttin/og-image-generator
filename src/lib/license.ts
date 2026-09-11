@@ -68,7 +68,27 @@ export async function validateLicenseKey(
     }
 
     const data = await response.json();
-    const isValid = Boolean(data && data.valid === true);
+
+    // 1. Lemon Squeezy base validity check
+    const isBaseValid = Boolean(data && data.valid === true);
+
+    // 2. Key status check: must be 'active' (rejects 'disabled', 'expired', etc.)
+    const isActive = !data.license_key || data.license_key.status === "active";
+
+    // 3. Test mode defense: reject test-generated keys in production unless LEMONSQUEEZY_ALLOW_TEST_MODE=true
+    const isTestModeAllowed =
+      process.env.LEMONSQUEEZY_ALLOW_TEST_MODE === "true" ||
+      !data.license_key ||
+      data.license_key.test_mode === false;
+
+    // 4. Store isolation: verify that key was issued by the configured Lemon Squeezy store
+    const expectedStoreId = process.env.LEMONSQUEEZY_STORE_ID?.trim();
+    const isStoreValid =
+      !expectedStoreId || String(data.meta?.store_id) === expectedStoreId;
+
+    const isValid = Boolean(
+      isBaseValid && isActive && isTestModeAllowed && isStoreValid
+    );
 
     // Maintain cache size to prevent memory leaks in long-running edge instances
     if (LICENSE_CACHE.size >= MAX_CACHE_ENTRIES) {
